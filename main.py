@@ -35,8 +35,9 @@ def hello(request):
         print(request)
         print("hmmm")
         print(request.__dict__)
-        print("grrr")
+        print("before TypeError")
         print(f"is request json: {request.is_json()}")
+        print("after TypeError")
         print(f"data: {request.data}")
         print(f"args: {request.args}")
         print(f"form: {request.form}")
@@ -53,6 +54,7 @@ def hello(request):
         # )
         tts = "this is a simple response from github"
     except Exception:
+        print("in exception handler")
         tts = "I'm sorry, something went wrong. My bad."
 
     response_dict = dict(
