@@ -32,6 +32,7 @@ def hello(request):
 
     print("XXX5 request follows")
     print(request)
+    print(request.__dict__)
     # pprint.pprint(request_json)
     # response_dict = dict(
     #     conversationToken="conversation_token",
