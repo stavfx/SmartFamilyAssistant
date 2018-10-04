@@ -1,8 +1,9 @@
 from json import dumps
-# import pprint
+import requests
 
 
 def sam_test(request):
+    print(requests)
     pass
 
 
