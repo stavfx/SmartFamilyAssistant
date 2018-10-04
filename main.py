@@ -4,6 +4,7 @@ import requests
 
 def sam_test(request):
     print(requests)
+    print("successfully imported requests")
     pass
 
 
