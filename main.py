@@ -26,28 +26,33 @@ def hello(request):
         Response object using
         `make_response <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>`.
     """
-    sam_test(request)
-    stav_test(request)
-    rich_test(request)
+    try:
+        sam_test(request)
+        stav_test(request)
+        rich_test(request)
 
-    print("XXX6 request follows")
-    print(request)
-    print(request.__dict__)
-    print(f"is request json: {request.is_json()}")
-    print(f"data: {request.data}")
-    print(f"args: {request.args}")
-    print(f"form: {request.form}")
-    # pprint.pprint(request_json)
-    # response_dict = dict(
-    #     conversationToken="conversation_token",
-    #     userStorage="user_storage",
-    #     resetUserStorage=False,
-    #     expectUserResponse=False,
-    #     # expectedInputs=[],
-    #     # finalResponse=None,
-    #     # customPushMessage=None,
-    #     isInSandbox=True,
-    # )
+        print("XXX6 request follows")
+        print(request)
+        print(request.__dict__)
+        print(f"is request json: {request.is_json()}")
+        print(f"data: {request.data}")
+        print(f"args: {request.args}")
+        print(f"form: {request.form}")
+        # pprint.pprint(request_json)
+        # response_dict = dict(
+        #     conversationToken="conversation_token",
+        #     userStorage="user_storage",
+        #     resetUserStorage=False,
+        #     expectUserResponse=False,
+        #     # expectedInputs=[],
+        #     # finalResponse=None,
+        #     # customPushMessage=None,
+        #     isInSandbox=True,
+        # )
+        tts = "this is a simple response from github"
+    except Exception:
+        tts = "I'm sorry, something went wrong. My bad."
+
     response_dict = dict(
         payload=dict(
             google=dict(
@@ -56,7 +61,7 @@ def hello(request):
                     items=[
                         dict(
                             simpleResponse=dict(
-                                textToSpeech="this is a simple response from github"
+                                textToSpeech=tts
                             )
                         )
                     ]
