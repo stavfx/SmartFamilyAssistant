@@ -1,4 +1,5 @@
 from json import dumps
+import pprint
 
 
 def hello(request):
@@ -12,7 +13,7 @@ def hello(request):
     """
     request_json = request.get_json()
     print("XXX4 request follows")
-    print(request_json)
+    pprint.pprint(request_json)
     # response_dict = dict(
     #     conversationToken="conversation_token",
     #     userStorage="user_storage",
@@ -42,5 +43,5 @@ def hello(request):
 
     response_json = dumps(response_dict)
     print("XXX4 response follows")
-    print(response_json)
+    pprint.pprint(response_json)
     return response_json
