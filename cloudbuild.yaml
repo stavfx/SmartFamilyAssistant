@@ -7,4 +7,3 @@ steps:
 
 substitutions:
   _FUNCTION_NAME: smartFamily
-  _BUCKET_NAME: smartfamilyhackday
