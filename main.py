@@ -30,9 +30,13 @@ def hello(request):
     stav_test(request)
     rich_test(request)
 
-    print("XXX5 request follows")
+    print("XXX6 request follows")
     print(request)
     print(request.__dict__)
+    print(f"is request json: {request.is_json()}")
+    print(f"data: {request.data}")
+    print(f"args: {request.args}")
+    print(f"form: {request.form}")
     # pprint.pprint(request_json)
     # response_dict = dict(
     #     conversationToken="conversation_token",
@@ -62,7 +66,7 @@ def hello(request):
     )
 
     response_json = dumps(response_dict)
-    print("XXX4 response follows")
+    print("XXX6 response follows")
     print(response_json)
     # pprint.pprint(response_json)
     return response_json
