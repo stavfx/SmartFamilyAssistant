@@ -31,9 +31,11 @@ def hello(request):
         stav_test(request)
         rich_test(request)
 
-        print("XXX6 request follows")
+        print("XXX7 request follows")
         print(request)
+        print("hmmm")
         print(request.__dict__)
+        print("grrr")
         print(f"is request json: {request.is_json()}")
         print(f"data: {request.data}")
         print(f"args: {request.args}")
@@ -71,7 +73,7 @@ def hello(request):
     )
 
     response_json = dumps(response_dict)
-    print("XXX6 response follows")
+    print("XXX7 response follows")
     print(response_json)
     # pprint.pprint(response_json)
     return response_json
