@@ -11,7 +11,7 @@ def hello(request):
         `make_response <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>`.
     """
     request_json = request.get_json()
-    print("XXX request follows")
+    print("XXX4 request follows")
     print(request_json)
     # response_dict = dict(
     #     conversationToken="conversation_token",
@@ -31,7 +31,7 @@ def hello(request):
                     items=[
                         dict(
                             simpleResponse=dict(
-                                textToSpeech="this is a simple response"
+                                textToSpeech="this is a simple response from github"
                             )
                         )
                     ]
@@ -41,6 +41,6 @@ def hello(request):
     )
 
     response_json = dumps(response_dict)
-    print("XXX response follows")
+    print("XXX4 response follows")
     print(response_json)
     return response_json
