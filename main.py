@@ -8,6 +8,7 @@ def sam_test(request):
 
 
 def stav_test(request):
+    print("stav time bbyyyyyy")
     pass
 
 
