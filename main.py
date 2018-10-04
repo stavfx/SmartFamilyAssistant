@@ -2,6 +2,15 @@ from json import dumps
 import pprint
 
 
+def sam_test(request):
+    pass
+
+def stav_test(request):
+    pass
+
+def rich_test(request):
+    pass
+
 def hello(request):
     """Responds to any HTTP request.
     Args:
@@ -11,6 +20,10 @@ def hello(request):
         Response object using
         `make_response <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>`.
     """
+    sam_test(request)
+    stav_test(request)
+    rich_test(request)
+
     request_json = request.get_json()
     print("XXX4 request follows")
     pprint.pprint(request_json)
