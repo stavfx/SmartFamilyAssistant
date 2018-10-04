@@ -1,4 +1,4 @@
-from json import dumps
+from json import dumps, loads
 import requests
 
 
@@ -30,9 +30,8 @@ def hello(request):
     stav_test(request)
     rich_test(request)
 
-    request_json = request.get_json()
-    print("XXX4 request follows")
-    print(request_json)
+    print("XXX5 request follows")
+    print(request)
     # pprint.pprint(request_json)
     # response_dict = dict(
     #     conversationToken="conversation_token",
