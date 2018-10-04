@@ -1,15 +1,18 @@
 from json import dumps
-import pprint
+# import pprint
 
 
 def sam_test(request):
     pass
 
+
 def stav_test(request):
     pass
 
+
 def rich_test(request):
     pass
+
 
 def hello(request):
     """Responds to any HTTP request.
@@ -26,7 +29,8 @@ def hello(request):
 
     request_json = request.get_json()
     print("XXX4 request follows")
-    pprint.pprint(request_json)
+    print(request_json)
+    # pprint.pprint(request_json)
     # response_dict = dict(
     #     conversationToken="conversation_token",
     #     userStorage="user_storage",
@@ -56,5 +60,6 @@ def hello(request):
 
     response_json = dumps(response_dict)
     print("XXX4 response follows")
-    pprint.pprint(response_json)
+    print(response_json)
+    # pprint.pprint(response_json)
     return response_json
