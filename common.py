@@ -7,7 +7,7 @@ from pprint import pprint
 import shlex
 import subprocess
 
-from schedule_check.common.client import clients
+from client import clients
 
 
 def auth(username, password):

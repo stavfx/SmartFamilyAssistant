@@ -7,7 +7,6 @@ import common
 
 def sam_test(request):
     common.auth("test", "test")
-    assert r.status_code == 200
     pass
 
 
