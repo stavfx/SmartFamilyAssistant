@@ -35,7 +35,8 @@ def make_location_response(message, user, location):
     map_url = f"https://maps.googleapis.com/maps/api/staticmap?center={location_str}&zoom=15&size=320x240" \
               "&markers=anchor:center|icon:https://f8bkee3ht8.execute-api.us-west-2.amazonaws.com/live/images" \
               f"/{user.imageId}/64/64?format=png|{location_str}&key=AIzaSyDS2nG7-Aec721rRJ_lw9zoeJsrUkFTmNE"
-    return make_response_dict(message)['payload']['google']['richResponse']['items'].append(
+    result = make_response_dict(message)
+    result['payload']['google']['richResponse']['items'].append(
         dict(
             basicCard=dict(
                 image=map_url,
@@ -48,6 +49,7 @@ def make_location_response(message, user, location):
             )
         )
     )
+    return result
 
 
 def _do_pause_internet(name, pause):
