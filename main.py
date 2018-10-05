@@ -36,7 +36,7 @@ def get_location(mdn, name):
 
 def make_location_response(message, user, location):
     location_str = f"{location.lat},{location.lon}"
-    map_url = f"https://maps.googleapis.com/maps/api/staticmap?center={location_str}&zoom=15&size=1050x600" \
+    map_url = f"https://maps.googleapis.com/maps/api/staticmap?center={location_str}&zoom=15&size=650x350" \
               "&markers=anchor:center|icon:https://f8bkee3ht8.execute-api.us-west-2.amazonaws.com/live/images" \
               f"/{user.imageId}/64/64?format=png|{location_str}&key=AIzaSyDS2nG7-Aec721rRJ_lw9zoeJsrUkFTmNE"
     result = make_response_dict(message, continue_conversation=False)
@@ -78,8 +78,13 @@ def pause_internet(mdn, name):
                                   continue_conversation=False)
 
     errorMsg = _do_pause_internet(mdn, name, pause=True)
-    msg = errorMsg if errorMsg else f"I have blocked the Internet for {name}"
-    return make_response_dict(msg, continue_conversation=False)
+    if errorMsg:
+        msg = errorMsg
+        retry = True
+    else:
+        msg = f"I have blocked the Internet for {name}."
+        retry = False
+    return make_response_dict(msg, continue_conversation=retry)
 
 
 def unpause_internet(mdn, name):
@@ -88,8 +93,13 @@ def unpause_internet(mdn, name):
                                   continue_conversation=False)
 
     errorMsg = _do_pause_internet(mdn, name, pause=False)
-    msg = errorMsg if errorMsg else f"{name} can browse the Internet again"
-    return make_response_dict(msg, continue_conversation=False)
+    if errorMsg:
+        msg = errorMsg
+        retry = True
+    else:
+        msg = f"{name} can browse the Internet again."
+        retry = False
+    return make_response_dict(msg, continue_conversation=retry)
 
 
 def welcome(query_result, storage):
