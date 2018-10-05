@@ -27,7 +27,10 @@ def get_location(name, params) -> str:
         return f"Sorry, I don't know who {name} is."
     location = get_last_known_location(overview, user.id)
 
-    return f"{name} is at {location.lat},{location.lon}"
+    if location:
+        return f"{name} is at {location.lat},{location.lon}"
+    else:
+        return f"Sorry, I don't know where {name} is."
 
 
 def get_last_known_location(overview, user_id):

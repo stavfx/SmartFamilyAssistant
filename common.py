@@ -42,10 +42,7 @@ def get_overview(access_token):
     """
     Return the overview for the user associated with the access token.
     """
-    sections = [] # empty mean all sections
-    return clients.gateway.overview.getOverview(
-        accessToken=access_token,
-        sections=sections).result()
+    return clients.gateway.overview.getOverview(accessToken=access_token).result()
 
 
 def is_test_account(group):
