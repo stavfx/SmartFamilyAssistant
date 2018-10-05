@@ -4,24 +4,28 @@ from time import time
 
 import ring
 
-
-def sam_test(request):
-    ring.auth("5551196700", "abcd1234")
-    pass
-
-
-def stav_test(request):
-    print("stav test")
-    pass
+# really we'd use oauth
+# just hardcode for now
+PASSWORD = "abcd1234"
 
 
-def rich_test(request):
-    pass
+# def sam_test(request):
+#     ring.auth("5551196700", PASSWORD)
+#     pass
+
+
+# def stav_test(request):
+#     print("stav test")
+#     pass
+
+
+# def rich_test(request):
+#     pass
 
 
 # XXX move some of this to ring.py
 def get_location(name, params):
-    token, _ = ring.auth("5551196700", "abcd1234")
+    token, _ = ring.auth("5551196700", PASSWORD)
     overview = ring.get_overview(token)
     # user = next((usr for usr in overview.users if usr.name == name), None)
     user = ring.get_user(overview.users, name)
@@ -56,7 +60,7 @@ def login(mdn):
 
 
 def _do_pause_internet(name, pause):
-    token, _ = ring.auth("5551196700", "abcd1234")
+    token, _ = ring.auth("5551196700", PASSWORD)
     overview = ring.get_overview(token)
     user = ring.get_user(overview.users, name)
     if user is None:
@@ -87,7 +91,7 @@ def welcome(user_id, query_result):
 
     if mdn:
         # TODO: TEMP HARDCODED MDN! use mdn param in the future
-        token, _ = ring.auth("5551196700", "abcd1234")
+        token, _ = ring.auth("5551196700", PASSWORD)
         overview = ring.get_overview(token)
         ring_user_id = overview.me.userId
         user = next((usr for usr in overview.users if usr.id == ring_user_id), None)
@@ -104,7 +108,7 @@ def welcome(user_id, query_result):
 
 def show_possible_actions(user_id):
     # TODO get mdn from storage, or forbid access
-    token, _ = ring.auth("5551196700", "abcd1234")
+    token, _ = ring.auth("5551196700", PASSWORD)
     overview = ring.get_overview(token)
     current_user_id = overview.me.userId
     current_user = next((usr for usr in overview.users if usr.id == current_user_id), None)
