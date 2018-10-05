@@ -191,6 +191,11 @@ def hello(request):
             response_dict = login(name)
         elif (intent == 'Pause Internet'):
             response_dict = pause_internet(name)
+            # XXX temp here
+            user_storage_new = dict(name=name,
+                                    intent=intent,
+                                    time=time())
+            response_dict['payload']['google']['userStorage'] = dict_to_str(user_storage_new)
         elif (intent == 'Welcome'):
             response_dict = welcome(name)
         elif intent is not None:
@@ -200,10 +205,11 @@ def hello(request):
             # XXX really we probably should punt
             response_dict = no_intent(name)
 
-        user_storage_new = dict(name=name,
-                                intent=intent,
-                                time=time())
-        response_dict['payload']['google']['userStorage'] = dict_to_str(user_storage_new)
+        # XXX temporarily moved above
+        # user_storage_new = dict(name=name,
+        #                         intent=intent,
+        #                         time=time())
+        # response_dict['payload']['google']['userStorage'] = dict_to_str(user_storage_new)
 
         # response_str += f" , conversation I D {id_short(conv_id)} , user I D {id_short(user_id)}"
         # continue_conversation = False
