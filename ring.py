@@ -51,7 +51,7 @@ def get_user_by_name(users, name):
 
     Return None if not found.
     """
-    return next((user for user in users if user.name == name), None)
+    return next((user for user in users if user.name.lower() == name.lower()), None)
 
 
 def get_user_by_id(users, user_id):
