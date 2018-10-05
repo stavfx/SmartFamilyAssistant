@@ -48,6 +48,7 @@ def make_response_dict(response_str, user_storage=None):
     Return a response dictionary based on an input text to speech string.
 
     user_storage is an optional dict to persist
+    XXX try just a string
     """
     google_dict = dict(
         expectUserResponse=True,
@@ -63,7 +64,8 @@ def make_response_dict(response_str, user_storage=None):
     )
 
     if user_storage:
-        google_dict['userStorage'] = dumps(user_storage)
+        # google_dict['userStorage'] = dumps(user_storage)
+        google_dict['userStorage'] = user_storage
 
     return dict(
         payload=dict(
@@ -94,7 +96,7 @@ def hello(request):
         stav_test(request)
         rich_test(request)
 
-        print("XXX13 request follows")
+        print("XXX14 request follows")
         # print(request)
         # print("dict follows")
         # print(request.__dict__)
@@ -148,12 +150,13 @@ def hello(request):
         print(sys.exc_info())
         response_str = error()
 
-    user_storage = dict(name=name,
-                        intent=intent,
-                        time=time())
+    # user_storage = dict(name=name,
+    #                     intent=intent,
+    #                     time=time())
+    user_storage = f"time={time()}"
     response_dict = make_response_dict(response_str, user_storage)
     response_json = dumps(response_dict)
-    print("XXX13 response follows")
+    print("XXX14 response follows")
     print(response_json)
     # pprint.pprint(response_json)
     return response_json
