@@ -28,7 +28,7 @@ def get_location(name, params):
     token, _ = ring.auth("5551196700", PASSWORD)
     overview = ring.get_overview(token)
     # user = next((usr for usr in overview.users if usr.name == name), None)
-    user = ring.get_user(overview.users, name)
+    user = ring.get_user_by_name(overview.users, name)
     if user is None:
         return make_response_dict(f"Sorry, I don't know who {name} is.")
     location = get_last_known_location(overview, user.id)
@@ -62,7 +62,7 @@ def login(mdn):
 def _do_pause_internet(name, pause):
     token, _ = ring.auth("5551196700", PASSWORD)
     overview = ring.get_overview(token)
-    user = ring.get_user(overview.users, name)
+    user = ring.get_user_by_name(overview.users, name)
     if user is None:
         return make_response_dict(f"Sorry, I don't know who {name} is.")
 
@@ -93,8 +93,7 @@ def welcome(user_id, query_result):
         # TODO: TEMP HARDCODED MDN! use mdn param in the future
         token, _ = ring.auth("5551196700", PASSWORD)
         overview = ring.get_overview(token)
-        ring_user_id = overview.me.userId
-        user = next((usr for usr in overview.users if usr.id == ring_user_id), None)
+        user = ring.get_user_by_id(overview.users, overview.me.userId)
         # TODO: save mdn to storage
         return make_response_dict(f"Hi {user.name}! Nice to see you!", continue_conversation=True)
 

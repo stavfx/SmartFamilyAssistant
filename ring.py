@@ -45,13 +45,22 @@ def get_overview(access_token):
         sections=sections).result()
 
 
-def get_user(users, name):
+def get_user_by_name(users, name):
     """
     Given a list of users, return the user with the matching name.
 
     Return None if not found.
     """
     return next((user for user in users if user.name == name), None)
+
+
+def get_user_by_id(users, user_id):
+    """
+    Given a list of users, return the user with the matching id.
+
+    Return None if not found.
+    """
+    return next((user for user in users if user.id == user_id), None)
 
 
 def get_member(members, user):
