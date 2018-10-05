@@ -56,7 +56,22 @@ def pause_internet(name):
     return make_response_dict(f"Pause Internet for {name}")
 
 
-def welcome(name):
+def welcome(user_id, query_result):
+    # TODO: check for mdn in storage
+
+    # no user storage ->
+    mdn = query_result.get('parameters', {}).get('mdn', None)
+
+    if mdn:
+        # TODO: TEMP HARDCODED MDN! use mdn param in the future
+        token, _ = common.auth("5551196700", "abcd1234")
+        overview = common.get_overview(token)
+        ring_user_id = overview.me.userId
+        user = next((usr for usr in overview.users if usr.id == ring_user_id), None)
+        # TODO: save mdn to storage
+        return make_response_dict(f"Hi {user.name}! Nice to see you!", continue_conversation=True)
+
+    # Unknown user + no mdn param -> ask for mdn
     # Change to f"Hi! Welcome to Verizon Smart Family. What's your phone number?"
     response_dict = make_response_dict(f"MDN please.", continue_conversation=True)
     response_dict['payload']['google']['systemIntent'] = dict(intent="actions.intent.TEXT",
@@ -195,7 +210,7 @@ def hello(request):
             response_dict = pause_internet(name)
             # XXX temp here
         elif (intent == 'Welcome'):
-            response_dict = welcome(name)
+            response_dict = welcome(user_id, query_result)
         elif intent is not None:
             # XXX really we probably should punt
             response_dict = unexpected_intent(name, intent)
