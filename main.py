@@ -58,7 +58,7 @@ def pause_internet(name):
 
 def welcome(name):
     # Change to f"Hi! Welcome to Verizon Smart Family. What's your phone number?"
-    response_dict = make_response_dict(f"MDN please.")
+    response_dict = make_response_dict(f"MDN please.", continue_conversation=True)
     response_dict['payload']['google']['systemIntent'] = dict(intent="actions.intent.TEXT")
     return response_dict
 
