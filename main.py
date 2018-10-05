@@ -302,6 +302,7 @@ def hello(request):
 
         if 'resetUserStorage' in response_dict['payload']['google']:
             print("Resetting user storage")
+            response_dict['payload']['google']['userStorage'] = ""
         else:
             print(f"write user_storage: {user_storage}")
             response_dict['payload']['google']['userStorage'] = dict_to_str(user_storage)
