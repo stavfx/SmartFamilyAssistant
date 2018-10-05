@@ -61,14 +61,16 @@ def get_nearest_place_and_distance(places, lat, lon):
     min_distance = None
     nearest_place = None
 
+    print(f"places: {places}")
     for place in places:
         dist = _calculate_distance(place_lat=place.lat, place_lon=place.lon,
                                    location_lat=lat, location_lon=lon)
+        print(f"({lat},{lon}) is {dist} from {place.name}")
         if min_distance is None or dist < min_distance:
             min_distance = dist
             nearest_place = place
 
-    return (nearest_place, min_distance)
+    return (nearest_place, round(min_distance))
 
 
 def _calculate_distance(place_lat: float, place_lon: float,

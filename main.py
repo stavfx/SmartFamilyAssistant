@@ -92,7 +92,6 @@ def welcome_mdn(mdn, storage):
     token, _ = ring.auth(mdn, PASSWORD)
     overview = ring.get_overview(token)
     user = ring.get_user_by_id(overview.users, overview.me.userId)
-    print(f"places: {overview.places}")
     storage['mdn'] = mdn
     # return make_response_dict(f"Hi {user.name}! Nice to see you!")
     return user.name
