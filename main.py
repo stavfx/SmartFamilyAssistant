@@ -245,15 +245,15 @@ def hello(request):
         user_storage = str_to_dict(user.get("userStorage"))
         print(f"user_storage: {user_storage}")
 
-        if (intent == 'Get Location'):
+        if (intent == 'get_location'):
             response_dict = get_location(name, request_json)
-        elif (intent == 'Login'):
+        elif (intent == 'login'):
             response_dict = login(name)
-        elif (intent == 'pauseInternet'):
+        elif (intent == 'pause_internet'):
             response_dict = pause_internet(name)
-        elif (intent == 'unpauseInternet'):
+        elif (intent == 'unpause_internet'):
             response_dict = unpause_internet(name)
-        elif (intent == 'Welcome'):
+        elif (intent == 'welcome'):
             response_dict = welcome(user_id, query_result)
         elif intent == 'what_can_i_do':
             response_dict = show_possible_actions(user_id)
