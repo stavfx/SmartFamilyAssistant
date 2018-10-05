@@ -200,7 +200,7 @@ def hello(request):
             response_dict = welcome(name)
         elif intent is not None:
             # XXX really we probably should punt
-            response_dict = unexpected_intent(name)
+            response_dict = unexpected_intent(name, intent)
         else:
             # XXX really we probably should punt
             response_dict = no_intent(name)
