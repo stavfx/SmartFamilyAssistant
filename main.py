@@ -102,9 +102,13 @@ def show_possible_actions(user_id):
     current_user = next((usr for usr in overview.users if usr.id == current_user_id), None)
     other_user_names = [u.name for u in overview.users if u.id != current_user_id]
     children_names = [u.name for u in overview.users if common.is_child(overview.group.members, u)]
-    return make_response_dict(f"You can locate {'. '.join(other_user_names)}, or even your own device,"
+    all_but_last_child = children_names[:-1]
+    last_child = children_names[-1]
+    return make_response_dict(f"You can locate {', '.join(other_user_names)}, or even your own device,"
                               + f" {current_user.name}!\n"
-                              + f"You can also Pause and Un-pause internet access for {'. '.join(children_names)}",
+                              + f"You can also Pause and Un-pause internet access for {', '.join(all_but_last_child)}"
+                              + f" and {last_child}.",
+
                               continue_conversation=True)
 
 
