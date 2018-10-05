@@ -23,30 +23,18 @@ PASSWORD = "abcd1234"
 #     pass
 
 
-# XXX move some of this to ring.py
 def get_location(name, params):
     token, _ = ring.auth("5551196700", PASSWORD)
     overview = ring.get_overview(token)
-    # user = next((usr for usr in overview.users if usr.name == name), None)
     user = ring.get_user_by_name(overview.users, name)
     if user is None:
         return make_response_dict(f"Sorry, I don't know who {name} is.")
-    location = get_last_known_location(overview, user.id)
 
+    location = ring.get_last_known_location(overview.lastKnowns, user.id)
     if location:
         return make_response_dict(f"{name} is at {location.lat},{location.lon}")
     else:
         return make_response_dict(f"Sorry, I don't know where {name} is.")
-
-
-# XXX move some of this to ring.py
-def get_last_known_location(overview, user_id):
-    last_known = next(x for x in overview.lastKnowns if x.userId == user_id)
-    network = last_known.lastKnownNetworkLocation
-    device = last_known.lastKnownDeviceLocation
-    network_time = network.observedTimestamp.timestamp() if network else 0
-    device_time = device.observedTimestamp.timestamp() if device else 0
-    return network if network_time > device_time else device
 
 
 def login(mdn):

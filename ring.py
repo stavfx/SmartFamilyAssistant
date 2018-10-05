@@ -113,3 +113,16 @@ def update_controls_settings(access_token, group_id, user_id, block_all_internet
             predefinedPolicyIds=[],  # required
             customPolicies=[],       # required
         )).result()
+
+
+def get_last_known_location(last_knowns, user_id):
+    """
+    Given a list of last known objects for a group, return the last known
+    location for a given user id.
+    """
+    last_known = next(lk for lk in last_knowns if lk.userId == user_id)
+    network = last_known.lastKnownNetworkLocation
+    device = last_known.lastKnownDeviceLocation
+    network_time = network.observedTimestamp.timestamp() if network else 0
+    device_time = device.observedTimestamp.timestamp() if device else 0
+    return network if network_time > device_time else device
