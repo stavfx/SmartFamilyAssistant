@@ -2,9 +2,10 @@ from json import dumps, loads
 import requests
 import sys
 
+import common
 
 def sam_test(request):
-    r = requests.get('https://gateway.vcf-test.vzw.dev.llabs.io/health')
+    common.auth("test", "test")
     assert r.status_code == 200
     pass
 
