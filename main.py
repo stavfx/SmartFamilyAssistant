@@ -42,7 +42,7 @@ def get_location(mdn, name):
 
 def make_location_response(message, user, location):
     location_str = f"{location.lat},{location.lon}"
-    map_url = f"https://maps.googleapis.com/maps/api/staticmap?center={location_str}&zoom=15&size=320x240" \
+    map_url = f"https://maps.googleapis.com/maps/api/staticmap?center={location_str}&zoom=15&size=1050x600" \
               "&markers=anchor:center|icon:https://f8bkee3ht8.execute-api.us-west-2.amazonaws.com/live/images" \
               f"/{user.imageId}/64/64?format=png|{location_str}&key=AIzaSyDS2nG7-Aec721rRJ_lw9zoeJsrUkFTmNE"
     result = make_response_dict(message, continue_conversation=False)
@@ -239,7 +239,7 @@ def make_response_dict(response_str, continue_conversation=True):
 
 
 def error():
-    return make_response_dict("I'm sorry, something went wrong. My bad.")
+    return make_response_dict("I'm sorry, something went wrong. My bad.", continue_conversation=False)
 
 
 def id_short(long_id):
