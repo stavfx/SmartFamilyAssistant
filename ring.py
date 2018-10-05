@@ -120,7 +120,7 @@ def get_last_known_location(last_knowns, user_id):
     Given a list of last known objects for a group, return the last known
     location for a given user id.
     """
-    last_known = next(lk for lk in last_knowns if lk.userId == user_id)
+    last_known = next((lk for lk in last_knowns if lk.userId == user_id), None)
     if not last_known:
         return None
 
