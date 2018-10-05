@@ -1,5 +1,4 @@
-from json import dumps, loads
-import requests
+from json import dumps  # , loads
 import sys
 from time import time
 
@@ -21,10 +20,7 @@ def rich_test(request):
 
 
 def get_location(name, params):
-    originalPayload = params.get("originalDetectIntentRequest", {}).get("payload", {})
-    convoId = originalPayload.get("conversation", {}).get("conversationId")
-    userId = originalPayload.get("user", {}).get("userId")
-    return f"Get the location of {name} (convoId={convoId} userId={userId})"
+    return f"Get the location of {name}"
 
 
 def login(name):
@@ -80,6 +76,10 @@ def error():
     return "I'm sorry, something went wrong. My bad."
 
 
+def id_short(long_id):
+    return long_id[0:3] + long_id[-3:]
+
+
 def hello(request):
     """Responds to any HTTP request.
     Args:
@@ -94,7 +94,7 @@ def hello(request):
         stav_test(request)
         rich_test(request)
 
-        print("XXX12 request follows")
+        print("XXX13 request follows")
         print(request)
         print("dict follows")
         print(request.__dict__)
@@ -121,6 +121,10 @@ def hello(request):
         intent = request_json.get('queryResult', {}).get('intent', {}).get('displayName', None)
         print(f"intent: {intent}")
 
+        original_payload = request_json.get("originalDetectIntentRequest", {}).get("payload", {})
+        conv_id = original_payload.get("conversation", {}).get("conversationId")
+        user_id = original_payload.get("user", {}).get("userId")
+
         if (intent == 'Get Location'):
             response_str = get_location(name, request_json)
         elif (intent == 'Login'):
@@ -136,6 +140,8 @@ def hello(request):
             # XXX really we probably should punt
             response_str = no_intent(name)
 
+        response_str += f" conversation id {id_short(conv_id)} user id {id_short(user_id)}"
+
     except Exception as e:
         print("in exception handler")
         print("exception is")
@@ -149,7 +155,7 @@ def hello(request):
                         time=time())
     response_dict = make_response_dict(response_str, user_storage)
     response_json = dumps(response_dict)
-    print("XXX12 response follows")
+    print("XXX13 response follows")
     print(response_json)
     # pprint.pprint(response_json)
     return response_json
