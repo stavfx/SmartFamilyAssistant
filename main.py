@@ -99,7 +99,7 @@ def show_possible_actions(user_id):
     overview = ring.get_overview(token)
     current_user_id = overview.me.userId
 
-    current_user = ring.get_user_by_id(current_user_id)
+    current_user = ring.get_user_by_id(overview.users, current_user_id)
     other_user_names = [u.name for u in overview.users if u.id != current_user_id]
     children_names = [u.name for u in overview.users if ring.is_child(overview.group.members, u)]
 
