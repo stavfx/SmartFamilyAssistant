@@ -1,26 +1,10 @@
-from json import dumps  # , loads
+from json import dumps
 import sys
-from time import time
-
 import ring
 
 # really we'd use oauth
 # just hardcode for now
 PASSWORD = "abcd1234"
-
-
-# def sam_test(request):
-#     ring.auth("5551196700", PASSWORD)
-#     pass
-
-
-# def stav_test(request):
-#     print("stav test")
-#     pass
-
-
-# def rich_test(request):
-#     pass
 
 
 def get_location(name, params):
@@ -35,16 +19,6 @@ def get_location(name, params):
         return make_response_dict(f"{name} is at {location.lat},{location.lon}")
     else:
         return make_response_dict(f"Sorry, I don't know where {name} is.")
-
-
-def login(mdn):
-    # XXX this is preliminary
-    # check userId
-    # do we have an association for the userId
-    # if so, return mdn
-    # if not, prompt user for mdn
-    # return f"Login as {name}"
-    return make_response_dict(f"Login function is still in progress")
 
 
 def _do_pause_internet(name, pause):
@@ -222,25 +196,9 @@ def hello(request):
         `make_response <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>`.
     """
     try:
-        # sam_test(request)
-        # stav_test(request)
-        # rich_test(request)
-
         print("XXX15 request follows")
-        # print(request)
-        # print("dict follows")
-        # print(request.__dict__)
-        # print(f"is request json: {request.is_json}")
-        # print(f"data: {request.data}")
-        # print(f"args: {request.args}")
-        # print(f"form: {request.form}")
-        # print("json follows")
         request_json = request.get_json()
         print(request_json)
-
-        # request_dict = loads(request_json)
-        # print("dict follows")
-        # print(request_dict)
 
         query_result = request_json.get('queryResult', {})
 
@@ -264,8 +222,6 @@ def hello(request):
 
         if (intent == 'get_location'):
             response_dict = get_location(name, request_json)
-        elif (intent == 'login'):
-            response_dict = login(name)
         elif (intent == 'pause_internet'):
             response_dict = pause_internet(name)
         elif (intent == 'unpause_internet'):
