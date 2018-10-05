@@ -10,7 +10,8 @@ PASSWORD = "abcd1234"
 
 def get_location(mdn, name):
     if not mdn:
-        return make_response_dict("Sorry, you must be signed in as a parent to get location")
+        return make_response_dict("Sorry, you must be signed in as a parent to get location",
+                                  continue_conversation=False)
 
     token, _ = ring.auth(mdn, PASSWORD)
     overview = ring.get_overview(token)
@@ -24,13 +25,16 @@ def get_location(mdn, name):
             (place_name, distance_meters, at_place) = places.get_nearest_place_at_info(
                 overview.places, location.lat, location.lon, location.accuracyMeters)
             if at_place:
-                return make_response_dict(f"{name} is at {place_name}")
+                return make_response_dict(f"{name} is at {place_name}",
+                                          continue_conversation=False)
                 # return make_location_response(f"{name} is at {place_name}", user, location)
             else:
-                return make_response_dict(f"{name} is {distance_meters} meters from {place_name}")
+                return make_response_dict(f"{name} is {distance_meters} meters from {place_name}",
+                                          continue_conversation=False)
                 # return make_location_response(f"{name} is {distance_meters} meters from {place_name}", user, location)
         else:
-            return make_response_dict(f"{name} is at {location.lat},{location.lon}")
+            return make_response_dict(f"{name} is at {location.lat},{location.lon}",
+                                      continue_conversation=False)
             # return make_location_response(f"{name} is at {location.lat},{location.lon}", user, location)
     else:
         return make_response_dict(f"Sorry, I don't know where {name} is.")
@@ -74,18 +78,22 @@ def _do_pause_internet(mdn, name, pause):
 
 def pause_internet(mdn, name):
     if not mdn:
-        return make_response_dict("Sorry, you must be signed in as a parent to pause Internet.")
+        return make_response_dict("Sorry, you must be signed in as a parent to pause Internet.",
+                                  continue_conversation=False)
 
     _do_pause_internet(mdn, name, pause=True)
-    return make_response_dict(f"I have blocked the Internet for {name}")
+    return make_response_dict(f"I have blocked the Internet for {name}",
+                              continue_conversation=False)
 
 
 def unpause_internet(mdn, name):
     if not mdn:
-        return make_response_dict("Sorry, you must be signed in as a parent to turn Internet back on.")
+        return make_response_dict("Sorry, you must be signed in as a parent to turn Internet back on.",
+                                  continue_conversation=False)
 
     _do_pause_internet(mdn, name, pause=False)
-    return make_response_dict(f"{name} can browse the Internet again")
+    return make_response_dict(f"{name} can browse the Internet again",
+                              continue_conversation=False)
 
 
 def welcome(query_result, storage):
@@ -133,7 +141,8 @@ def welcome_mdn(mdn, storage):
 
 def show_possible_actions(mdn):
     if not mdn:
-        return make_response_dict("You must be signed in as a parent to use Verizon Smart Family.")
+        return make_response_dict("You must be signed in as a parent to use Verizon Smart Family.",
+                                  continue_conversation=False)
 
     token, _ = ring.auth(mdn, PASSWORD)
     overview = ring.get_overview(token)
