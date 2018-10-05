@@ -38,7 +38,7 @@ def make_location_response(message, user, location):
     location_str = f"{location.lat},{location.lon}"
     map_url = f"https://maps.googleapis.com/maps/api/staticmap?center={location_str}&zoom=15&size=650x350" \
               "&markers=anchor:center|icon:https://f8bkee3ht8.execute-api.us-west-2.amazonaws.com/live/images" \
-              f"/{user.imageId}/64/64?format=png|{location_str}&key=AIzaSyDS2nG7-Aec721rRJ_lw9zoeJsrUkFTmNE"
+              f"/{user.imageId}/64/64?format=png9|{location_str}&key=AIzaSyDS2nG7-Aec721rRJ_lw9zoeJsrUkFTmNE"
     result = make_response_dict(message, continue_conversation=False)
     result['payload']['google']['richResponse']['items'].append(
         dict(
