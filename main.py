@@ -128,7 +128,8 @@ def make_response_dict(response_str, continue_conversation=False):
 
 
 def error():
-    return make_response_dict("I'm sorry, something went wrong. My bad.", continue_conversation=True)
+    return make_response_dict("I'm sorry, something went wrong. My bad.",
+                              continue_conversation=True)
 
 
 def id_short(long_id):
