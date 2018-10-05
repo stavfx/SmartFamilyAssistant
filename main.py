@@ -32,7 +32,7 @@ def hello(request):
         stav_test(request)
         rich_test(request)
 
-        print("XXX9 request follows")
+        print("XXX10 request follows")
         print(request)
         print("dict follows")
         print(request.__dict__)
@@ -63,7 +63,9 @@ def hello(request):
         tts = "this is a simple response from github"
     except Exception as e:
         print("in exception handler")
+        print("exception is")
         print(e)
+        print("exc info is")
         print(sys.exc_info())
         tts = "I'm sorry, something went wrong. My bad."
 
@@ -85,7 +87,7 @@ def hello(request):
     )
 
     response_json = dumps(response_dict)
-    print("XXX9 response follows")
+    print("XXX10 response follows")
     print(response_json)
     # pprint.pprint(response_json)
     return response_json
