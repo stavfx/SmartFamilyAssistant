@@ -19,8 +19,24 @@ def rich_test(request):
     pass
 
 
-def get_location(name, params):
-    return f"Get the location of {name}"
+def get_location(name, params) -> str:
+    token, _ = common.auth("5551196700", "abcd1234")
+    overview = common.get_overview(token)
+    user = next((usr for usr in overview.users if usr.name == name), None)
+    if user is None:
+        return f"Sorry, I don't know who {name} is."
+    location = get_last_known_location(overview, user.id)
+
+    return f"{name} is at {location.lat},{location.lon}"
+
+
+def get_last_known_location(overview, user_id):
+    last_known = next(x for x in overview.lastKnowns if x.userId == user_id)
+    network = last_known.lastKnownNetworkLocation
+    device = last_known.lastKnownDeviceLocation
+    network_time = network.observedTimestamp.timestamp() if network else 0
+    device_time = device.observedTimestamp.timestamp() if device else 0
+    return network if network_time > device_time else device
 
 
 def login(name):
