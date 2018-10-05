@@ -19,10 +19,12 @@ def rich_test(request):
     pass
 
 
+# XXX move some of this to common.py
 def get_location(name, params):
     token, _ = common.auth("5551196700", "abcd1234")
     overview = common.get_overview(token)
-    user = next((usr for usr in overview.users if usr.name == name), None)
+    # user = next((usr for usr in overview.users if usr.name == name), None)
+    user = common.get_user(overview.users, name)
     if user is None:
         return make_response_dict(f"Sorry, I don't know who {name} is.")
     location = get_last_known_location(overview, user.id)
@@ -33,6 +35,7 @@ def get_location(name, params):
         return make_response_dict(f"Sorry, I don't know where {name} is.")
 
 
+# XXX move some of this to common.py
 def get_last_known_location(overview, user_id):
     last_known = next(x for x in overview.lastKnowns if x.userId == user_id)
     network = last_known.lastKnownNetworkLocation
@@ -53,7 +56,19 @@ def login(mdn):
 
 
 def pause_internet(name):
-    return make_response_dict(f"Pause Internet for {name}")
+    # return make_response_dict(f"Pause Internet for {name}")
+    token, _ = common.auth("5551196700", "abcd1234")
+    overview = common.get_overview(token)
+    user = common.get_user(overview.users, name)
+    if user is None:
+        return make_response_dict(f"Sorry, I don't know who {name} is.")
+
+    if not common.is_child(overview.group.members, user):
+        return make_response_dict(f"You can only pause the internet for a child.")
+
+    # XXX error handling?
+    common.update_controls_settings(overview.group.id, user.id, block_all_internet=True)
+    return make_response_dict(f"I have blocked the internet for {name}")
 
 
 def welcome(user_id, query_result):
