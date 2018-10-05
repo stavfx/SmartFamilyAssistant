@@ -122,7 +122,7 @@ def welcome_mdn(mdn, storage):
     return user.name
 
 
-def show_possible_actions(google_user_id):
+def show_possible_actions():
     # TODO get mdn from storage, or forbid access
     token, _ = ring.auth("5551196700", PASSWORD)
     overview = ring.get_overview(token)
@@ -258,7 +258,7 @@ def hello(request):
         elif (intent == 'welcome'):
             response_dict = welcome(query_result, user_storage)
         elif intent == 'what_can_i_do':
-            response_dict = show_possible_actions(google_user_id)
+            response_dict = show_possible_actions()
         elif intent is not None:
             # XXX really we probably should punt
             response_dict = unexpected_intent(name, intent)
