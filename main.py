@@ -71,7 +71,12 @@ def no_intent(name):
 def dict_to_str(_dict):
     """
     Convert a dict to a string of equal separated key value pairs joined by commas
+
+    Return the empty string for no dict.
     """
+    if not _dict:
+        return ""
+
     return ",".join([f"{k}={v}"
                      for k, v
                      in _dict.items()])
@@ -80,7 +85,12 @@ def dict_to_str(_dict):
 def str_to_dict(_str):
     """
     Convert a string of equal separated key value pairs joined by commas, to a dict
+
+    Return None for the empty string.
     """
+    if not _str:
+        return None
+
     return {k: v
             for (k, _, v)
             in [item.partition('=')
