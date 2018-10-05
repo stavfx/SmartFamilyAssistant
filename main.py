@@ -200,6 +200,11 @@ def hello(request):
             # XXX really we probably should punt
             response_dict = no_intent(name)
 
+        user_storage_new = dict(name=name,
+                                intent=intent,
+                                time=time())
+        response_dict['payload']['google']['userStorage'] = dict_to_str(user_storage_new)
+
         # response_str += f" , conversation I D {id_short(conv_id)} , user I D {id_short(user_id)}"
         # continue_conversation = False
 
@@ -211,10 +216,6 @@ def hello(request):
         print(sys.exc_info())
         response_dict = error()
 
-    user_storage_new = dict(name=name,
-                            intent=intent,
-                            time=time())
-    response_dict['payload']['google']['userStorage'] = dict_to_str(user_storage_new)
     response_json = dumps(response_dict)
     print("XXX15 response follows")
     print(response_json)
