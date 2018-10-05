@@ -114,9 +114,11 @@ def update_controls_settings(group_id, user_id, block_all_internet):
     clients.gateway.controls.updateControlsSettings(
         groupId=group_id,
         userId=user_id,
-        blockAllInternet=block_all_internet,
-        predefinedPolicyIds=[],  # required
-        customPolicies=[],       # required
+        request=dict(
+            blockAllInternet=block_all_internet,
+            predefinedPolicyIds=[],  # required
+            customPolicies=[],       # required
+        ),
     )
 
 # def is_test_account(group):
