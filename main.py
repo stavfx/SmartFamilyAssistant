@@ -3,10 +3,11 @@ import requests
 import sys
 from time import time
 
+import common
+
 
 def sam_test(request):
-    r = requests.get('https://gateway.vcf-test.vzw.dev.llabs.io/health')
-    assert r.status_code == 200
+    common.auth("5551196700", "abcd1234")
     pass
 
 
@@ -19,8 +20,11 @@ def rich_test(request):
     pass
 
 
-def get_location(name):
-    return f"Get the location of {name}"
+def get_location(name, params):
+    originalPayload = params.get("originalDetectIntentRequest", {}).get("payload", {})
+    convoId = originalPayload.get("conversation", {}).get("conversationId", "missing-convo-id")
+    userId = originalPayload.get("user", {}).get("userId")
+    return f"Get the location of {name} (convoId={convoId} userId={userId})"
 
 
 def login(name):
@@ -118,7 +122,7 @@ def hello(request):
         print(f"intent: {intent}")
 
         if (intent == 'Get Location'):
-            response_str = get_location(name)
+            response_str = get_location(name, request_json.get('queryResult', {}).get('parameters', {}))
         elif (intent == 'Login'):
             response_str = login(name)
         elif (intent == 'Pause Internet'):
