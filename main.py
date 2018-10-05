@@ -42,8 +42,14 @@ def get_last_known_location(overview, user_id):
     return network if network_time > device_time else device
 
 
-def login(name):
-    return f"Login as {name}"
+def login(mdn):
+    # XXX this is preliminary
+    # check userId
+    # do we have an association for the userId
+    # if so, return mdn
+    # if not, prompt user for mdn
+    # return f"Login as {name}"
+    return f"Login function is still in progress"
 
 
 def pause_internet(name):
@@ -60,6 +66,26 @@ def unexpected_intent(name, intent):
 
 def no_intent(name):
     return f"{name}, I did not receive a command"
+
+
+def dict_to_str(_dict):
+    """
+    Convert a dict to a string of equal separated key value pairs joined by commas
+    """
+    return ",".join([f"{k}={v}"
+                     for k, v
+                     in _dict.items()])
+
+
+def str_to_dict(_str):
+    """
+    Convert a string of equal separated key value pairs joined by commas, to a dict
+    """
+    return {k: v
+            for (k, _, v)
+            in [item.partition('=')
+                for item
+                in _str.split(',')]}
 
 
 def make_response_dict(response_str, continue_conversation=False, user_storage=None):
@@ -82,7 +108,7 @@ def make_response_dict(response_str, continue_conversation=False, user_storage=N
     )
 
     if user_storage:
-        google_dict['userStorage'] = ",".join([f"{k}={v}" for k, v in user_storage.items()])
+        google_dict['userStorage'] = dict_to_str(user_storage)
 
     return dict(
         payload=dict(
@@ -109,9 +135,9 @@ def hello(request):
         `make_response <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>`.
     """
     try:
-        sam_test(request)
-        stav_test(request)
-        rich_test(request)
+        # sam_test(request)
+        # stav_test(request)
+        # rich_test(request)
 
         print("XXX15 request follows")
         # print(request)
@@ -129,18 +155,23 @@ def hello(request):
         # print("dict follows")
         # print(request_dict)
 
-        name = request_json.get('queryResult', {}).get('parameters', {}).get('given-name', None)
+        query_result = request_json.get('queryResult', {})
+
+        name = query_result.get('parameters', {}).get('given-name', None)
         print(f"name: {name}")
         # XXX really we probably should punt
         if not name:
             name = "No Name"
 
-        intent = request_json.get('queryResult', {}).get('intent', {}).get('displayName', None)
+        intent = query_result.get('intent', {}).get('displayName', None)
         print(f"intent: {intent}")
 
         original_payload = request_json.get("originalDetectIntentRequest", {}).get("payload", {})
         conv_id = original_payload.get("conversation", {}).get("conversationId")
-        user_id = original_payload.get("user", {}).get("userId")
+        user = original_payload.get("user", {})
+        user_id = user.get("userId")
+        user_storage = str_to_dict(user.get("userStorage"))
+        print(f"user_storage: {user_storage}")
 
         if (intent == 'Get Location'):
             response_str = get_location(name, request_json)
@@ -169,13 +200,13 @@ def hello(request):
         response_str = error()
         continue_conversation = True
 
-    user_storage = dict(name=name,
-                        intent=intent,
-                        time=time())
+    user_storage_new = dict(name=name,
+                            intent=intent,
+                            time=time())
     # user_storage = f"time={time()}"
     response_dict = make_response_dict(response_str,
                                        continue_conversation=continue_conversation,
-                                       user_storage=user_storage)
+                                       user_storage=user_storage_new)
     response_json = dumps(response_dict)
     print("XXX15 response follows")
     print(response_json)
