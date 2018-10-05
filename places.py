@@ -16,7 +16,7 @@ from geopy.distance import distance
 def get_nearest_place_at_info(places, lat, lon, accuracy_meters):
     """
     Given a list of places and a location (lat, lon, accuracy), return a tuple
-    of the name of the nearest place, the distance to it, and whether or not
+    of the name of the nearest place, the distance to it (in meters), and whether or not
     we are at the place.
 
     Return a None tuple if there are no places.
@@ -26,6 +26,7 @@ def get_nearest_place_at_info(places, lat, lon, accuracy_meters):
     nearest_place = None
 
     print(f"places: {places}")
+    print(f"location: ({lat},{lon}) acc={accuracy_meters}")
     for place in places:
         dist = _calculate_distance(place_lat=place.lat, place_lon=place.lon,
                                    location_lat=lat, location_lon=lon)
@@ -59,8 +60,7 @@ def _calculate_distance(place_lat, place_lon,
 
     :return: The distance, in meters
     """
-    print(f"Calculating distance from place ({place_lat},{place_lon})"
-          "to location ({location_lat},{location_lon})")
+    print(f"Calculating distance from place ({place_lat},{place_lon}) to location ({location_lat},{location_lon})")
     return distance((place_lat, place_lon),
                     (location_lat, location_lon)).meters
 
