@@ -21,11 +21,14 @@ def get_location(name, params):
             (place_name, distance_meters, at_place) = places.get_nearest_place_at_info(
                 overview.places, location.lat, location.lon, location.accuracyMeters)
             if at_place:
-                return make_location_response(f"{name} is at {place_name}", user, location)
+                return make_response_dict(f"{name} is at {place_name}")
+                # return make_location_response(f"{name} is at {place_name}", user, location)
             else:
-                return make_location_response(f"{name} is {distance_meters} meters from {place_name}", user, location)
+                return make_response_dict(f"{name} is {distance_meters} meters from {place_name}")
+                # return make_location_response(f"{name} is {distance_meters} meters from {place_name}", user, location)
         else:
-            return make_location_response(f"{name} is at {location.lat},{location.lon}", user, location)
+            return make_response_dict(f"{name} is at {location.lat},{location.lon}")
+            # return make_location_response(f"{name} is at {location.lat},{location.lon}", user, location)
     else:
         return make_response_dict(f"Sorry, I don't know where {name} is.")
 
