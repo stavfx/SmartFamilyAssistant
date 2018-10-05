@@ -165,7 +165,8 @@ def logout():
     """
     Used administratively for clearing user storage.
     """
-    response_dict = make_response_dict("Goodbye")
+    response_dict = make_response_dict("Goodbye",
+                                       continue_conversation=False)
     # XXX this might not work?
     response_dict['payload']['google']['resetUserStorage'] = True
     return response_dict
