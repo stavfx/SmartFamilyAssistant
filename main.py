@@ -59,7 +59,7 @@ def welcome(query_result, storage):
     mdn = storage.get('mdn', None)
     if mdn:
         name = welcome_mdn(mdn, storage)
-        return make_response_dict(f"Hi {name}! Welcome back!", continue_conversation=True)
+        return make_response_dict(f"Hi {name}! Welcome back!")
     else:
         # try query params
         mdn = query_result.get('parameters', {}).get('mdn', None)
@@ -69,8 +69,7 @@ def welcome(query_result, storage):
                 f"Welcome {name}!\n"
                 "In the real world, we'd have you log in with OAuth2 using your phone.\n"
                 "But this is a demo, so we just logged you in with your super secure password...\n"
-                "NOT!",
-                continue_conversation=True)
+                "NOT!")
 
     # No stored or provided mdn, ask for it
     return prompt_user_for_mdn()
@@ -78,8 +77,7 @@ def welcome(query_result, storage):
 
 def prompt_user_for_mdn():
     response_dict = make_response_dict(
-        "Hi! Welcome to Verizon Smart Family. What's your phone number?",
-        continue_conversation=True)
+        "Hi! Welcome to Verizon Smart Family. What's your phone number?")
     response_dict['payload']['google']['systemIntent'] = dict(intent="actions.intent.TEXT",
                                                               parameterName="mdn")
     return response_dict
@@ -96,7 +94,7 @@ def welcome_mdn(mdn, storage):
     user = ring.get_user_by_id(overview.users, overview.me.userId)
     print(f"places: {overview.places}")
     storage['mdn'] = mdn
-    # return make_response_dict(f"Hi {user.name}! Nice to see you!", continue_conversation=True)
+    # return make_response_dict(f"Hi {user.name}! Nice to see you!")
     return user.name
 
 
@@ -116,8 +114,7 @@ def show_possible_actions(google_user_id):
         f"You can locate {', '.join(other_user_names)}, or even your own device,"
         + f" {current_user.name}!\n"
         + f"You can also Pause and Un-pause internet access for {', '.join(all_but_last_child)}"
-        + f" and {last_child}.",
-        continue_conversation=True)
+        + f" and {last_child}.")
 
 
 def unexpected_intent(name, intent):
@@ -187,8 +184,7 @@ def make_response_dict(response_str, continue_conversation=True):
 
 
 def error():
-    return make_response_dict("I'm sorry, something went wrong. My bad.",
-                              continue_conversation=True)
+    return make_response_dict("I'm sorry, something went wrong. My bad.")
 
 
 def id_short(long_id):
@@ -250,7 +246,6 @@ def hello(request):
         response_dict['payload']['google']['userStorage'] = dict_to_str(user_storage)
 
         # response_str += f" , conversation I D {id_short(conv_id)} , user I D {id_short(google_user_id)}"
-        # continue_conversation = False
 
     except Exception as e:
         print("in exception handler")
