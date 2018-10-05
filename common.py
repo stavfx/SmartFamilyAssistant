@@ -44,7 +44,7 @@ def get_overview(access_token):
     """
     sections = ["me", "systemInfo", "group",
                 "places", "lastKnowns", "users",
-                "controlsSettingsList", "devices", "folders"]
+                "controlsSettingsList", "devices"]
     return clients.gateway.overview.getOverview(
         accessToken=access_token,
         sections=sections).result()
