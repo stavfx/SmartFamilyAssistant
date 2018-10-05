@@ -182,6 +182,8 @@ def hello(request):
         conv_id = original_payload.get("conversation", {}).get("conversationId")
         user = original_payload.get("user", {})
         user_id = user.get("userId")
+        print(f"conv_id={conv_id}, user_id={user_id}")
+
         user_storage = str_to_dict(user.get("userStorage"))
         print(f"user_storage: {user_storage}")
 
