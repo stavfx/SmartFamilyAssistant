@@ -10,7 +10,7 @@ For more usage information, see the Bravado docs:
 
 import logging
 import os.path
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 from bravado.client import SwaggerClient
 from bravado.swagger_model import load_file
