@@ -71,27 +71,48 @@ def unpause_internet(name):
     return make_response_dict(f"{name} can browse the Internet again")
 
 
-def welcome(google_user_id, query_result):
-    # TODO: check for mdn in storage
-
-    # no user storage ->
-    mdn = query_result.get('parameters', {}).get('mdn', None)
-
+def welcome(query_result, storage):
+    # try storage
+    mdn = storage.get('mdn', None)
     if mdn:
-        # TODO: TEMP HARDCODED MDN! use mdn param in the future
-        token, _ = ring.auth("5551196700", PASSWORD)
-        overview = ring.get_overview(token)
-        print(f"places: {overview.places}")
-        user = ring.get_user_by_id(overview.users, overview.me.userId)
-        # TODO: save mdn to storage
-        return make_response_dict(f"Hi {user.name}! Nice to see you!", continue_conversation=True)
+        name = welcome_mdn(mdn, storage)
+        return make_response_dict(f"Hi {name}! Welcome back!", continue_conversation=True)
+    else:
+        # try query params
+        mdn = query_result.get('parameters', {}).get('mdn', None)
+        if mdn:
+            name = welcome_mdn(mdn, storage)
+            return make_response_dict(
+                f"Welcome {name}!\n"
+                "In the real world, we'd have you log in with OAuth2 using your phone.\n"
+                "But this is a demo, so we just logged you in with your super secure password... NOT!",
+                continue_conversation=True)
 
-    # Unknown user + no mdn param -> ask for mdn
-    # Change to f"Hi! Welcome to Verizon Smart Family. What's your phone number?"
-    response_dict = make_response_dict(f"MDN please.", continue_conversation=True)
+    # No stored or provided mdn, ask for it
+    return prompt_user_for_mdn()
+
+
+def prompt_user_for_mdn():
+    response_dict = make_response_dict("Hi! Welcome to Verizon Smart Family. What's your phone number?",
+                                       continue_conversation=True)
     response_dict['payload']['google']['systemIntent'] = dict(intent="actions.intent.TEXT",
                                                               parameterName="mdn")
     return response_dict
+
+
+def welcome_mdn(mdn, storage):
+    """
+    Log in with the provided mdn. Upon success save mdn to storage.
+
+    Return the name of the user that just logged in.
+    """
+    token, _ = ring.auth(mdn, PASSWORD)
+    overview = ring.get_overview(token)
+    user = ring.get_user_by_id(overview.users, overview.me.userId)
+    print(f"places: {overview.places}")
+    storage['mdn'] = mdn
+    # return make_response_dict(f"Hi {user.name}! Nice to see you!", continue_conversation=True)
+    return user.name
 
 
 def show_possible_actions(google_user_id):
@@ -140,10 +161,10 @@ def str_to_dict(_str):
     """
     Convert a string of equal separated key value pairs joined by commas, to a dict
 
-    Return None for the empty string.
+    Return Empty dict for a None string.
     """
     if not _str:
-        return None
+        return dict()
 
     return {k: v
             for (k, _, v)
@@ -237,7 +258,7 @@ def hello(request):
         print(f"conv_id={conv_id}, google_user_id={google_user_id}")
 
         user_storage = str_to_dict(user.get("userStorage"))
-        print(f"user_storage: {user_storage}")
+        print(f"read user_storage: {user_storage}")
 
         if (intent == 'get_location'):
             response_dict = get_location(name, request_json)
@@ -248,7 +269,7 @@ def hello(request):
         elif (intent == 'unpause_internet'):
             response_dict = unpause_internet(name)
         elif (intent == 'welcome'):
-            response_dict = welcome(google_user_id, query_result)
+            response_dict = welcome(query_result, user_storage)
         elif intent == 'what_can_i_do':
             response_dict = show_possible_actions(google_user_id)
         elif intent is not None:
@@ -258,10 +279,8 @@ def hello(request):
             # XXX really we probably should punt
             response_dict = no_intent(name)
 
-        user_storage_new = dict(name=name,
-                                intent=intent,
-                                time=time())
-        response_dict['payload']['google']['userStorage'] = dict_to_str(user_storage_new)
+        print(f"write user_storage: {user_storage}")
+        response_dict['payload']['google']['userStorage'] = dict_to_str(user_storage)
 
         # response_str += f" , conversation I D {id_short(conv_id)} , user I D {id_short(google_user_id)}"
         # continue_conversation = False
