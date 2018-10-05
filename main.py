@@ -2,11 +2,11 @@ from json import dumps  # , loads
 import sys
 from time import time
 
-import common
+import ring
 
 
 def sam_test(request):
-    common.auth("5551196700", "abcd1234")
+    ring.auth("5551196700", "abcd1234")
     pass
 
 
@@ -19,12 +19,12 @@ def rich_test(request):
     pass
 
 
-# XXX move some of this to common.py
+# XXX move some of this to ring.py
 def get_location(name, params):
-    token, _ = common.auth("5551196700", "abcd1234")
-    overview = common.get_overview(token)
+    token, _ = ring.auth("5551196700", "abcd1234")
+    overview = ring.get_overview(token)
     # user = next((usr for usr in overview.users if usr.name == name), None)
-    user = common.get_user(overview.users, name)
+    user = ring.get_user(overview.users, name)
     if user is None:
         return make_response_dict(f"Sorry, I don't know who {name} is.")
     location = get_last_known_location(overview, user.id)
@@ -35,7 +35,7 @@ def get_location(name, params):
         return make_response_dict(f"Sorry, I don't know where {name} is.")
 
 
-# XXX move some of this to common.py
+# XXX move some of this to ring.py
 def get_last_known_location(overview, user_id):
     last_known = next(x for x in overview.lastKnowns if x.userId == user_id)
     network = last_known.lastKnownNetworkLocation
@@ -56,17 +56,17 @@ def login(mdn):
 
 
 def _do_pause_internet(name, pause):
-    token, _ = common.auth("5551196700", "abcd1234")
-    overview = common.get_overview(token)
-    user = common.get_user(overview.users, name)
+    token, _ = ring.auth("5551196700", "abcd1234")
+    overview = ring.get_overview(token)
+    user = ring.get_user(overview.users, name)
     if user is None:
         return make_response_dict(f"Sorry, I don't know who {name} is.")
 
-    if not common.is_child(overview.group.members, user):
+    if not ring.is_child(overview.group.members, user):
         return make_response_dict(
             f"You can only {'pause' if pause else 'un-pause'} the internet for a child.")
 
-    common.update_controls_settings(token, overview.group.id, user.id, block_all_internet=pause)
+    ring.update_controls_settings(token, overview.group.id, user.id, block_all_internet=pause)
 
 
 def pause_internet(name):
@@ -87,8 +87,8 @@ def welcome(user_id, query_result):
 
     if mdn:
         # TODO: TEMP HARDCODED MDN! use mdn param in the future
-        token, _ = common.auth("5551196700", "abcd1234")
-        overview = common.get_overview(token)
+        token, _ = ring.auth("5551196700", "abcd1234")
+        overview = ring.get_overview(token)
         ring_user_id = overview.me.userId
         user = next((usr for usr in overview.users if usr.id == ring_user_id), None)
         # TODO: save mdn to storage
@@ -104,12 +104,12 @@ def welcome(user_id, query_result):
 
 def show_possible_actions(user_id):
     # TODO get mdn from storage, or forbid access
-    token, _ = common.auth("5551196700", "abcd1234")
-    overview = common.get_overview(token)
+    token, _ = ring.auth("5551196700", "abcd1234")
+    overview = ring.get_overview(token)
     current_user_id = overview.me.userId
     current_user = next((usr for usr in overview.users if usr.id == current_user_id), None)
     other_user_names = [u.name for u in overview.users if u.id != current_user_id]
-    children_names = [u.name for u in overview.users if common.is_child(overview.group.members, u)]
+    children_names = [u.name for u in overview.users if ring.is_child(overview.group.members, u)]
     all_but_last_child = children_names[:-1]
     last_child = children_names[-1]
     return make_response_dict(
