@@ -59,14 +59,14 @@ def no_intent(name):
     return f"{name}, I did not receive a command"
 
 
-def make_response_dict(response_str, user_storage=None):
+def make_response_dict(response_str, continue_conversation=False, user_storage=None):
     """
     Return a response dictionary based on an input text to speech string.
 
     user_storage is an optional dict (of simple key/value pairs, not nested) to persist
     """
     google_dict = dict(
-        expectUserResponse=True,
+        expectUserResponse=continue_conversation,
         richResponse=dict(
             items=[
                 dict(
@@ -155,6 +155,7 @@ def hello(request):
             response_str = no_intent(name)
 
         response_str += f" , conversation ID {id_short(conv_id)} , user id {id_short(user_id)}"
+        continue_conversation = False
 
     except Exception as e:
         print("in exception handler")
@@ -163,12 +164,15 @@ def hello(request):
         print("exc info is")
         print(sys.exc_info())
         response_str = error()
+        continue_conversation = True
 
     user_storage = dict(name=name,
                         intent=intent,
                         time=time())
     # user_storage = f"time={time()}"
-    response_dict = make_response_dict(response_str, user_storage)
+    response_dict = make_response_dict(response_str,
+                                       continue_conversation=continue_conversation,
+                                       user_storage=user_storage)
     response_json = dumps(response_dict)
     print("XXX14 response follows")
     print(response_json)
