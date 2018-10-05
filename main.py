@@ -47,8 +47,7 @@ def make_response_dict(response_str, user_storage=None):
     """
     Return a response dictionary based on an input text to speech string.
 
-    user_storage is an optional dict to persist
-    XXX try just a string
+    user_storage is an optional dict (of simple key/value pairs, not nested) to persist
     """
     google_dict = dict(
         expectUserResponse=True,
@@ -64,8 +63,7 @@ def make_response_dict(response_str, user_storage=None):
     )
 
     if user_storage:
-        # google_dict['userStorage'] = dumps(user_storage)
-        google_dict['userStorage'] = user_storage
+        google_dict['userStorage'] = ",".join([f"{k}={v}" for k, v in user_storage.items()])
 
     return dict(
         payload=dict(
@@ -79,7 +77,7 @@ def error():
 
 
 def id_short(long_id):
-    return long_id[0:3] + long_id[-3:]
+    return " ".join([x for x in long_id[0:3] + long_id[-3:]])
 
 
 def hello(request):
@@ -140,7 +138,7 @@ def hello(request):
             # XXX really we probably should punt
             response_str = no_intent(name)
 
-        response_str += f" conversation id {id_short(conv_id)} user id {id_short(user_id)}"
+        response_str += f" , conversation ID {id_short(conv_id)} , user id {id_short(user_id)}"
 
     except Exception as e:
         print("in exception handler")
@@ -150,10 +148,10 @@ def hello(request):
         print(sys.exc_info())
         response_str = error()
 
-    # user_storage = dict(name=name,
-    #                     intent=intent,
-    #                     time=time())
-    user_storage = f"time={time()}"
+    user_storage = dict(name=name,
+                        intent=intent,
+                        time=time())
+    # user_storage = f"time={time()}"
     response_dict = make_response_dict(response_str, user_storage)
     response_json = dumps(response_dict)
     print("XXX14 response follows")
