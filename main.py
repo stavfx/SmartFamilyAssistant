@@ -25,17 +25,17 @@ def get_location(mdn, name):
             (place_name, distance_meters, at_place) = places.get_nearest_place_at_info(
                 overview.places, location.lat, location.lon, location.accuracyMeters)
             if at_place:
-                return make_response_dict(f"{name} is at {place_name}",
-                                          continue_conversation=False)
-                # return make_location_response(f"{name} is at {place_name}", user, location)
+                # return make_response_dict(f"{name} is at {place_name}",
+                #                           continue_conversation=False)
+                return make_location_response(f"{name} is at {place_name}", user, location)
             else:
-                return make_response_dict(f"{name} is {distance_meters} meters from {place_name}",
-                                          continue_conversation=False)
-                # return make_location_response(f"{name} is {distance_meters} meters from {place_name}", user, location)
+                # return make_response_dict(f"{name} is {distance_meters} meters from {place_name}",
+                #                           continue_conversation=False)
+                return make_location_response(f"{name} is {distance_meters} meters from {place_name}", user, location)
         else:
-            return make_response_dict(f"{name} is at {location.lat},{location.lon}",
-                                      continue_conversation=False)
-            # return make_location_response(f"{name} is at {location.lat},{location.lon}", user, location)
+            # return make_response_dict(f"{name} is at {location.lat},{location.lon}",
+            #                           continue_conversation=False)
+            return make_location_response(f"{name} is at {location.lat},{location.lon}", user, location)
     else:
         return make_response_dict(f"Sorry, I don't know where {name} is.")
 
@@ -45,11 +45,11 @@ def make_location_response(message, user, location):
     map_url = f"https://maps.googleapis.com/maps/api/staticmap?center={location_str}&zoom=15&size=320x240" \
               "&markers=anchor:center|icon:https://f8bkee3ht8.execute-api.us-west-2.amazonaws.com/live/images" \
               f"/{user.imageId}/64/64?format=png|{location_str}&key=AIzaSyDS2nG7-Aec721rRJ_lw9zoeJsrUkFTmNE"
-    result = make_response_dict(message)
+    result = make_response_dict(message, continue_conversation=False)
     result['payload']['google']['richResponse']['items'].append(
         dict(
             basicCard=dict(
-                image=map_url,
+                image=dict(url=map_url),
                 buttons=[
                     dict(
                         title="Launch Verizon Smart Family",
