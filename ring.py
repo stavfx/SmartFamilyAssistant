@@ -123,6 +123,9 @@ def get_last_known_location(last_knowns, user_id):
     last_known = next(lk for lk in last_knowns if lk.userId == user_id)
     network = last_known.lastKnownNetworkLocation
     device = last_known.lastKnownDeviceLocation
+    if not network and not device:
+        return None
+
     network_time = network.observedTimestamp.timestamp() if network else 0
     device_time = device.observedTimestamp.timestamp() if device else 0
     return network if network_time > device_time else device
