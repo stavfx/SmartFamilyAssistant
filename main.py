@@ -25,16 +25,10 @@ def get_location(mdn, name):
             (place_name, distance_meters, at_place) = places.get_nearest_place_at_info(
                 overview.places, location.lat, location.lon, location.accuracyMeters)
             if at_place:
-                # return make_response_dict(f"{name} is at {place_name}",
-                #                           continue_conversation=False)
                 return make_location_response(f"{name} is at {place_name}", user, location)
             else:
-                # return make_response_dict(f"{name} is {distance_meters} meters from {place_name}",
-                #                           continue_conversation=False)
                 return make_location_response(f"{name} is {distance_meters} meters from {place_name}", user, location)
         else:
-            # return make_response_dict(f"{name} is at {location.lat},{location.lon}",
-            #                           continue_conversation=False)
             return make_location_response(f"{name} is at {location.lat},{location.lon}", user, location)
     else:
         return make_response_dict(f"Sorry, I don't know where {name} is.")
@@ -63,15 +57,17 @@ def make_location_response(message, user, location):
 
 
 def _do_pause_internet(mdn, name, pause):
+    """
+    :return: error message, or None upon success
+    """
     token, _ = ring.auth(mdn, PASSWORD)
     overview = ring.get_overview(token)
     user = ring.get_user_by_name(overview.users, name)
     if user is None:
-        return make_response_dict(f"Sorry, I don't know who {name} is.")
+        return f"Sorry, I don't know who {name} is."
 
     if not ring.is_child(overview.group.members, user):
-        return make_response_dict(
-            f"You can only {'pause' if pause else 'un-pause'} the internet for a child.")
+        return f"You can only {'pause' if pause else 'un-pause'} the internet for a child."
 
     ring.update_controls_settings(token, overview.group.id, user.id, block_all_internet=pause)
 
@@ -81,9 +77,9 @@ def pause_internet(mdn, name):
         return make_response_dict("Sorry, you must be signed in as a parent to pause Internet.",
                                   continue_conversation=False)
 
-    _do_pause_internet(mdn, name, pause=True)
-    return make_response_dict(f"I have blocked the Internet for {name}",
-                              continue_conversation=False)
+    errorMsg = _do_pause_internet(mdn, name, pause=True)
+    msg = errorMsg if errorMsg else f"I have blocked the Internet for {name}"
+    return make_response_dict(msg, continue_conversation=False)
 
 
 def unpause_internet(mdn, name):
@@ -91,9 +87,9 @@ def unpause_internet(mdn, name):
         return make_response_dict("Sorry, you must be signed in as a parent to turn Internet back on.",
                                   continue_conversation=False)
 
-    _do_pause_internet(mdn, name, pause=False)
-    return make_response_dict(f"{name} can browse the Internet again",
-                              continue_conversation=False)
+    errorMsg = _do_pause_internet(mdn, name, pause=False)
+    msg = errorMsg if errorMsg else f"{name} can browse the Internet again"
+    return make_response_dict(msg, continue_conversation=False)
 
 
 def welcome(query_result, storage):
@@ -135,7 +131,6 @@ def welcome_mdn(mdn, storage):
     overview = ring.get_overview(token)
     user = ring.get_user_by_id(overview.users, overview.me.userId)
     storage['mdn'] = mdn
-    # return make_response_dict(f"Hi {user.name}! Nice to see you!")
     return user.name
 
 
