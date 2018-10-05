@@ -119,8 +119,7 @@ def update_controls_settings(access_token, group_id, user_id, block_all_internet
             blockAllInternet=block_all_internet,
             predefinedPolicyIds=[],  # required
             customPolicies=[],       # required
-        ),
-    )
+        )).result()
 
 # def is_test_account(group):
 #     """
