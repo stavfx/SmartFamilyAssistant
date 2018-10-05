@@ -8,7 +8,7 @@ import ring
 PASSWORD = "abcd1234"
 
 
-def get_location(name, params):
+def get_location(name):
     token, _ = ring.auth("5551196700", PASSWORD)
     overview = ring.get_overview(token)
     user = ring.get_user_by_name(overview.users, name)
@@ -250,7 +250,7 @@ def hello(request):
         print(f"read user_storage: {user_storage}")
 
         if (intent == 'get_location'):
-            response_dict = get_location(name, request_json)
+            response_dict = get_location(name)
         elif (intent == 'pause_internet'):
             response_dict = pause_internet(name)
         elif (intent == 'unpause_internet'):
