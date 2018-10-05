@@ -71,7 +71,7 @@ def unpause_internet(name):
     return make_response_dict(f"{name} can browse the Internet again")
 
 
-def welcome(user_id, query_result):
+def welcome(google_user_id, query_result):
     # TODO: check for mdn in storage
 
     # no user storage ->
@@ -93,7 +93,7 @@ def welcome(user_id, query_result):
     return response_dict
 
 
-def show_possible_actions(user_id):
+def show_possible_actions(google_user_id):
     # TODO get mdn from storage, or forbid access
     token, _ = ring.auth("5551196700", PASSWORD)
     overview = ring.get_overview(token)
@@ -232,8 +232,8 @@ def hello(request):
         original_payload = request_json.get("originalDetectIntentRequest", {}).get("payload", {})
         conv_id = original_payload.get("conversation", {}).get("conversationId")
         user = original_payload.get("user", {})
-        user_id = user.get("userId")
-        print(f"conv_id={conv_id}, user_id={user_id}")
+        google_user_id = user.get("userId")
+        print(f"conv_id={conv_id}, google_user_id={google_user_id}")
 
         user_storage = str_to_dict(user.get("userStorage"))
         print(f"user_storage: {user_storage}")
@@ -247,9 +247,9 @@ def hello(request):
         elif (intent == 'unpause_internet'):
             response_dict = unpause_internet(name)
         elif (intent == 'welcome'):
-            response_dict = welcome(user_id, query_result)
+            response_dict = welcome(google_user_id, query_result)
         elif intent == 'what_can_i_do':
-            response_dict = show_possible_actions(user_id)
+            response_dict = show_possible_actions(google_user_id)
         elif intent is not None:
             # XXX really we probably should punt
             response_dict = unexpected_intent(name, intent)
@@ -262,7 +262,7 @@ def hello(request):
                                 time=time())
         response_dict['payload']['google']['userStorage'] = dict_to_str(user_storage_new)
 
-        # response_str += f" , conversation I D {id_short(conv_id)} , user I D {id_short(user_id)}"
+        # response_str += f" , conversation I D {id_short(conv_id)} , user I D {id_short(google_user_id)}"
         # continue_conversation = False
 
     except Exception as e:
