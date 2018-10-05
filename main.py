@@ -6,7 +6,7 @@ import common
 
 
 def sam_test(request):
-    common.auth("test", "test")
+    common.auth("5551196700", "abcd1234")
     pass
 
 
