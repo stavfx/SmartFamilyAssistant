@@ -56,7 +56,6 @@ def login(mdn):
 
 
 def pause_internet(name):
-    # return make_response_dict(f"Pause Internet for {name}")
     token, _ = common.auth("5551196700", "abcd1234")
     overview = common.get_overview(token)
     user = common.get_user(overview.users, name)
@@ -66,9 +65,22 @@ def pause_internet(name):
     if not common.is_child(overview.group.members, user):
         return make_response_dict(f"You can only pause the internet for a child.")
 
-    # XXX error handling?
     common.update_controls_settings(token, overview.group.id, user.id, block_all_internet=True)
-    return make_response_dict(f"I have blocked the internet for {name}")
+    return make_response_dict(f"I have blocked the Internet for {name}")
+
+
+def unpause_internet(name):
+    token, _ = common.auth("5551196700", "abcd1234")
+    overview = common.get_overview(token)
+    user = common.get_user(overview.users, name)
+    if user is None:
+        return make_response_dict(f"Sorry, I don't know who {name} is.")
+
+    if not common.is_child(overview.group.members, user):
+        return make_response_dict(f"You can only un-pause the internet for a child.")
+
+    common.update_controls_settings(token, overview.group.id, user.id, block_all_internet=False)
+    return make_response_dict(f"{name} can browse the Internet again")
 
 
 def welcome(user_id, query_result):
@@ -239,9 +251,10 @@ def hello(request):
             response_dict = get_location(name, request_json)
         elif (intent == 'Login'):
             response_dict = login(name)
-        elif (intent == 'Pause Internet'):
+        elif (intent == 'pauseInternet'):
             response_dict = pause_internet(name)
-            # XXX temp here
+        elif (intent == 'unpauseInternet'):
+            response_dict = unpause_internet(name)
         elif (intent == 'Welcome'):
             response_dict = welcome(user_id, query_result)
         elif intent == 'what_can_i_do':
