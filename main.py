@@ -8,8 +8,11 @@ import ring
 PASSWORD = "abcd1234"
 
 
-def get_location(name):
-    token, _ = ring.auth("5551196700", PASSWORD)
+def get_location(mdn, name):
+    if not mdn:
+        return make_response_dict("Sorry, you must be signed in as a parent to get location")
+
+    token, _ = ring.auth(mdn, PASSWORD)
     overview = ring.get_overview(token)
     user = ring.get_user_by_name(overview.users, name)
     if user is None:
@@ -55,8 +58,8 @@ def make_location_response(message, user, location):
     return result
 
 
-def _do_pause_internet(name, pause):
-    token, _ = ring.auth("5551196700", PASSWORD)
+def _do_pause_internet(mdn, name, pause):
+    token, _ = ring.auth(mdn, PASSWORD)
     overview = ring.get_overview(token)
     user = ring.get_user_by_name(overview.users, name)
     if user is None:
@@ -69,13 +72,19 @@ def _do_pause_internet(name, pause):
     ring.update_controls_settings(token, overview.group.id, user.id, block_all_internet=pause)
 
 
-def pause_internet(name):
-    _do_pause_internet(name, pause=True)
+def pause_internet(mdn, name):
+    if not mdn:
+        return make_response_dict("Sorry, you must be signed in as a parent to pause Internet.")
+
+    _do_pause_internet(mdn, name, pause=True)
     return make_response_dict(f"I have blocked the Internet for {name}")
 
 
-def unpause_internet(name):
-    _do_pause_internet(name, pause=False)
+def unpause_internet(mdn, name):
+    if not mdn:
+        return make_response_dict("Sorry, you must be signed in as a parent to turn Internet back on.")
+
+    _do_pause_internet(mdn, name, pause=False)
     return make_response_dict(f"{name} can browse the Internet again")
 
 
@@ -122,9 +131,11 @@ def welcome_mdn(mdn, storage):
     return user.name
 
 
-def show_possible_actions():
-    # TODO get mdn from storage, or forbid access
-    token, _ = ring.auth("5551196700", PASSWORD)
+def show_possible_actions(mdn):
+    if not mdn:
+        return make_response_dict("You must be signed in as a parent to use Verizon Smart Family.")
+
+    token, _ = ring.auth(mdn, PASSWORD)
     overview = ring.get_overview(token)
     current_user_id = overview.me.userId
 
@@ -247,18 +258,19 @@ def hello(request):
         print(f"conv_id={conv_id}, google_user_id={google_user_id}")
 
         user_storage = str_to_dict(user.get("userStorage"))
-        print(f"read user_storage: {user_storage}")
+        mdn = user_storage.get('mdn', None)
+        print(f"read user_storage: {user_storage} mdn={mdn}")
 
         if (intent == 'get_location'):
-            response_dict = get_location(name)
+            response_dict = get_location(mdn, name)
         elif (intent == 'pause_internet'):
-            response_dict = pause_internet(name)
+            response_dict = pause_internet(mdn, name)
         elif (intent == 'unpause_internet'):
-            response_dict = unpause_internet(name)
+            response_dict = unpause_internet(mdn, name)
         elif (intent == 'welcome'):
             response_dict = welcome(query_result, user_storage)
         elif intent == 'what_can_i_do':
-            response_dict = show_possible_actions()
+            response_dict = show_possible_actions(mdn)
         elif intent is not None:
             # XXX really we probably should punt
             response_dict = unexpected_intent(name, intent)
