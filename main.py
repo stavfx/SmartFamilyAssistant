@@ -113,7 +113,7 @@ def hello(request):
         stav_test(request)
         rich_test(request)
 
-        print("XXX14 request follows")
+        print("XXX15 request follows")
         # print(request)
         # print("dict follows")
         # print(request.__dict__)
@@ -177,7 +177,7 @@ def hello(request):
                                        continue_conversation=continue_conversation,
                                        user_storage=user_storage)
     response_json = dumps(response_dict)
-    print("XXX14 response follows")
+    print("XXX15 response follows")
     print(response_json)
     # pprint.pprint(response_json)
     return response_json
