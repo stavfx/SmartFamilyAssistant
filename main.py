@@ -98,9 +98,11 @@ def show_possible_actions(user_id):
     token, _ = ring.auth("5551196700", PASSWORD)
     overview = ring.get_overview(token)
     current_user_id = overview.me.userId
-    current_user = next((usr for usr in overview.users if usr.id == current_user_id), None)
+
+    current_user = ring.get_user_by_id(current_user_id)
     other_user_names = [u.name for u in overview.users if u.id != current_user_id]
     children_names = [u.name for u in overview.users if ring.is_child(overview.group.members, u)]
+
     all_but_last_child = children_names[:-1]
     last_child = children_names[-1]
     return make_response_dict(
