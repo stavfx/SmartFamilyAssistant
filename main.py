@@ -1,10 +1,11 @@
 from json import dumps, loads
 import requests
+import sys
 
 
 def sam_test(request):
     r = requests.get('https://gateway.vcf-test.vzw.dev.llabs.io/health')
-    assert r.status_code==200
+    assert r.status_code == 200
     pass
 
 
@@ -31,7 +32,6 @@ def hello(request):
         stav_test(request)
         rich_test(request)
 
-        print("git rev is $Id$")
         print("XXX9 request follows")
         print(request)
         print("dict follows")
@@ -61,8 +61,10 @@ def hello(request):
         #     isInSandbox=True,
         # )
         tts = "this is a simple response from github"
-    except Exception:
+    except Exception as e:
         print("in exception handler")
+        print(e)
+        print(sys.exc_info())
         tts = "I'm sorry, something went wrong. My bad."
 
     response_dict = dict(
