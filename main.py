@@ -3,8 +3,8 @@ import requests
 
 
 def sam_test(request):
-    print(requests)
-    print("successfully imported requests")
+    r = requests.get('https://gateway.vcf-test.vzw.dev.llabs.io/health')
+    assert r.status_code==200
     pass
 
 
