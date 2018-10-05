@@ -25,9 +25,11 @@ def get_nearest_place_at_info(places, lat, lon, accuracy_meters):
     min_distance = None
     nearest_place = None
 
+    print(f"places: {places}")
     for place in places:
         dist = _calculate_distance(place_lat=place.lat, place_lon=place.lon,
                                    location_lat=lat, location_lon=lon)
+        print(f"({lat},{lon}) is {dist} from {place.name}")
         if min_distance is None or dist < min_distance:
             min_distance = dist
             nearest_place = place
@@ -45,36 +47,11 @@ def get_nearest_place_at_info(places, lat, lon, accuracy_meters):
     else:
         name = None
 
-    return (name, min_distance, at_place)
+    return (name, round(min_distance), at_place)
 
 
-def get_nearest_place_and_distance(places, lat, lon):
-    """
-    Get the nearest place, and the distance to a location, for a given group
-    id, given the location.
-
-    Return a None tuple if there are no places.
-    """
-    if not places:
-        return (None, None)
-
-    min_distance = None
-    nearest_place = None
-
-    print(f"places: {places}")
-    for place in places:
-        dist = _calculate_distance(place_lat=place.lat, place_lon=place.lon,
-                                   location_lat=lat, location_lon=lon)
-        print(f"({lat},{lon}) is {dist} from {place.name}")
-        if min_distance is None or dist < min_distance:
-            min_distance = dist
-            nearest_place = place
-
-    return (nearest_place, round(min_distance))
-
-
-def _calculate_distance(place_lat: float, place_lon: float,
-                        location_lat: float, location_lon: float) -> float:
+def _calculate_distance(place_lat, place_lon,
+                        location_lat, location_lon):
     """
     Calculate the distance between a place and location using lat and lon.
 
@@ -82,6 +59,8 @@ def _calculate_distance(place_lat: float, place_lon: float,
 
     :return: The distance, in meters
     """
+    print(f"Calculating distance from place ({place_lat},{place_lon})"
+          "to location ({location_lat},{location_lon})")
     return distance((place_lat, place_lon),
                     (location_lat, location_lon)).meters
 
