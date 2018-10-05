@@ -79,6 +79,23 @@ def welcome(user_id, query_result):
     return response_dict
 
 
+def show_possible_actions(user_id):
+    # TODO get mdn from storage, or forbid access
+    token, _ = common.auth("5551196700", "abcd1234")
+    overview = common.get_overview(token)
+    my_user_id = overview.me.userId
+    user = next((usr for usr in overview.users if usr.id == my_user_id), None)
+    user_names = [u.name for u in overview.users if u.id != my_user_id]
+    children_ids = []
+    for member in overview.group.memebers:
+        if member.managed:
+            children_ids += member.userId
+    children_names = [u.name for u in overview.users if u.id in children_ids]
+    return make_response_dict(f"You can locate {'. '.join(user_names)}, or even your own device, {user.name}!\n"
+                              + f"You can also Pause and Unpause internet access for {'. '.join(children_names)}",
+                              continue_conversation=True)
+
+
 def unexpected_intent(name, intent):
     return make_response_dict(f"{name}, I do not recognize the command {intent}")
 
@@ -211,6 +228,8 @@ def hello(request):
             # XXX temp here
         elif (intent == 'Welcome'):
             response_dict = welcome(user_id, query_result)
+        elif intent == 'what_can_i_do':
+            response_dict = show_possible_actions(user_id)
         elif intent is not None:
             # XXX really we probably should punt
             response_dict = unexpected_intent(name, intent)
