@@ -42,7 +42,7 @@ def get_overview(access_token):
     """
     Return the overview for the user associated with the access token.
     """
-    sections = ["me", "systemInfo", "group", "users"]
+    sections = [] # empty mean all sections
     return clients.gateway.overview.getOverview(
         accessToken=access_token,
         sections=sections).result()
