@@ -81,6 +81,7 @@ def welcome(google_user_id, query_result):
         # TODO: TEMP HARDCODED MDN! use mdn param in the future
         token, _ = ring.auth("5551196700", PASSWORD)
         overview = ring.get_overview(token)
+        print(f"places: {overview.places}")
         user = ring.get_user_by_id(overview.users, overview.me.userId)
         # TODO: save mdn to storage
         return make_response_dict(f"Hi {user.name}! Nice to see you!", continue_conversation=True)
