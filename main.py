@@ -1,5 +1,6 @@
 from json import dumps  # , loads
 import sys
+from time import time
 
 import common
 
@@ -119,9 +120,6 @@ def make_response_dict(response_str, continue_conversation=False):
         )
     )
 
-    # if user_storage:
-    #     google_dict['userStorage'] = dict_to_str(user_storage)
-
     return dict(
         payload=dict(
             google=google_dict
@@ -213,13 +211,10 @@ def hello(request):
         print(sys.exc_info())
         response_dict = error()
 
-    # user_storage_new = dict(name=name,
-    #                         intent=intent,
-    #                         time=time())
-    # user_storage = f"time={time()}"
-    # response_dict = make_response_dict(response_str,
-    #                                    continue_conversation=continue_conversation,
-    #                                    user_storage=user_storage_new)
+    user_storage_new = dict(name=name,
+                            intent=intent,
+                            time=time())
+    response_dict['payload']['google']['userStorage'] = dict_to_str(user_storage_new)
     response_json = dumps(response_dict)
     print("XXX15 response follows")
     print(response_json)
