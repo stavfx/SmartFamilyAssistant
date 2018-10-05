@@ -158,7 +158,9 @@ def str_to_dict(_str):
                 in _str.split(',')]}
 
 
-def make_response_dict(response_str, continue_conversation=False):
+# XXX try default True for now, so all True
+# continue_conversation=False
+def make_response_dict(response_str, continue_conversation=True):
     """
     Return a response dictionary based on an input text to speech string.
 
