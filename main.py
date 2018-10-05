@@ -32,13 +32,13 @@ def hello(request):
         rich_test(request)
 
         print("git rev is $Id$")
-        print("XXX7 request follows")
+        print("XXX8 request follows")
         print(request)
         print("hmmm")
         print(request.__dict__)
-        print("before TypeError")
+        print("before TypeError (fixed?)")
         print(f"is request json: {request.is_json}")
-        print("after TypeError")
+        print("after TypeError (fixed?)")
         print(f"data: {request.data}")
         print(f"args: {request.args}")
         print(f"form: {request.form}")
@@ -76,7 +76,7 @@ def hello(request):
     )
 
     response_json = dumps(response_dict)
-    print("XXX7 response follows")
+    print("XXX8 response follows")
     print(response_json)
     # pprint.pprint(response_json)
     return response_json
