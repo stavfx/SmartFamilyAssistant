@@ -1,5 +1,6 @@
 from json import dumps
 import sys
+import places
 import ring
 
 # really we'd use oauth
@@ -16,7 +17,15 @@ def get_location(name, params):
 
     location = ring.get_last_known_location(overview.lastKnowns, user.id)
     if location:
-        return make_response_dict(f"{name} is at {location.lat},{location.lon}")
+        if overview.places:
+            (place_name, distance_meters, at_place) = places.get_nearest_place_at_info(
+                overview.places, location.lat, location.lon, location.accuracyMeters)
+            if at_place:
+                return make_response_dict(f"{name} is at {place_name}")
+            else:
+                return make_response_dict(f"{name} is {distance_meters} meters from {place_name}")
+        else:
+            return make_response_dict(f"{name} is at {location.lat},{location.lon}")
     else:
         return make_response_dict(f"Sorry, I don't know where {name} is.")
 
