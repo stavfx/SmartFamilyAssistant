@@ -1,6 +1,5 @@
 from json import dumps  # , loads
 import sys
-from time import time
 
 import common
 
@@ -19,18 +18,18 @@ def rich_test(request):
     pass
 
 
-def get_location(name, params) -> str:
+def get_location(name, params):
     token, _ = common.auth("5551196700", "abcd1234")
     overview = common.get_overview(token)
     user = next((usr for usr in overview.users if usr.name == name), None)
     if user is None:
-        return f"Sorry, I don't know who {name} is."
+        return make_response_dict(f"Sorry, I don't know who {name} is.")
     location = get_last_known_location(overview, user.id)
 
     if location:
-        return f"{name} is at {location.lat},{location.lon}"
+        return make_response_dict(f"{name} is at {location.lat},{location.lon}")
     else:
-        return f"Sorry, I don't know where {name} is."
+        return make_response_dict(f"Sorry, I don't know where {name} is.")
 
 
 def get_last_known_location(overview, user_id):
@@ -49,23 +48,26 @@ def login(mdn):
     # if so, return mdn
     # if not, prompt user for mdn
     # return f"Login as {name}"
-    return f"Login function is still in progress"
+    return make_response_dict(f"Login function is still in progress")
 
 
 def pause_internet(name):
-    return f"Pause Internet for {name}"
+    return make_response_dict(f"Pause Internet for {name}")
 
 
 def welcome(name):
-    return f"{name}, welcome to Verizon Smart Family"
+    # Change to f"Hi! Welcome to Verizon Smart Family. What's your phone number?"
+    response_dict = make_response_dict(f"MDN please.")
+    response_dict['payload']['google']['systemIntent'] = dict(intent="actions.intent.TEXT")
+    return response_dict
 
 
 def unexpected_intent(name, intent):
-    return f"{name}, I do not recognize the command {intent}"
+    return make_response_dict(f"{name}, I do not recognize the command {intent}")
 
 
 def no_intent(name):
-    return f"{name}, I did not receive a command"
+    return make_response_dict(f"{name}, I did not receive a command")
 
 
 def dict_to_str(_dict):
@@ -88,7 +90,7 @@ def str_to_dict(_str):
                 in _str.split(',')]}
 
 
-def make_response_dict(response_str, continue_conversation=False, user_storage=None):
+def make_response_dict(response_str, continue_conversation=False):
     """
     Return a response dictionary based on an input text to speech string.
 
@@ -107,8 +109,8 @@ def make_response_dict(response_str, continue_conversation=False, user_storage=N
         )
     )
 
-    if user_storage:
-        google_dict['userStorage'] = dict_to_str(user_storage)
+    # if user_storage:
+    #     google_dict['userStorage'] = dict_to_str(user_storage)
 
     return dict(
         payload=dict(
@@ -174,22 +176,22 @@ def hello(request):
         print(f"user_storage: {user_storage}")
 
         if (intent == 'Get Location'):
-            response_str = get_location(name, request_json)
+            response_dict = get_location(name, request_json)
         elif (intent == 'Login'):
-            response_str = login(name)
+            response_dict = login(name)
         elif (intent == 'Pause Internet'):
-            response_str = pause_internet(name)
+            response_dict = pause_internet(name)
         elif (intent == 'Welcome'):
-            response_str = welcome(name)
+            response_dict = welcome(name)
         elif intent is not None:
             # XXX really we probably should punt
-            response_str = unexpected_intent(name)
+            response_dict = unexpected_intent(name)
         else:
             # XXX really we probably should punt
-            response_str = no_intent(name)
+            response_dict = no_intent(name)
 
-        response_str += f" , conversation I D {id_short(conv_id)} , user I D {id_short(user_id)}"
-        continue_conversation = False
+        # response_str += f" , conversation I D {id_short(conv_id)} , user I D {id_short(user_id)}"
+        # continue_conversation = False
 
     except Exception as e:
         print("in exception handler")
@@ -197,16 +199,15 @@ def hello(request):
         print(e)
         print("exc info is")
         print(sys.exc_info())
-        response_str = error()
-        continue_conversation = True
+        response_dict = error()
 
-    user_storage_new = dict(name=name,
-                            intent=intent,
-                            time=time())
+    # user_storage_new = dict(name=name,
+    #                         intent=intent,
+    #                         time=time())
     # user_storage = f"time={time()}"
-    response_dict = make_response_dict(response_str,
-                                       continue_conversation=continue_conversation,
-                                       user_storage=user_storage_new)
+    # response_dict = make_response_dict(response_str,
+    #                                    continue_conversation=continue_conversation,
+    #                                    user_storage=user_storage_new)
     response_json = dumps(response_dict)
     print("XXX15 response follows")
     print(response_json)
