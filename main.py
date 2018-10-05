@@ -161,6 +161,16 @@ def show_possible_actions(mdn):
         + f" and {last_child}.")
 
 
+def logout():
+    """
+    Used administratively for clearing user storage.
+    """
+    response_dict = make_response_dict("Goodbye")
+    # XXX this might not work?
+    response_dict['payload']['google']['resetUserStorage'] = True
+    return response_dict
+
+
 def unexpected_intent(name, intent):
     return make_response_dict(f"{name}, I do not recognize the command {intent}")
 
@@ -280,6 +290,8 @@ def hello(request):
             response_dict = welcome(query_result, user_storage)
         elif intent == 'what_can_i_do':
             response_dict = show_possible_actions(mdn)
+        elif intent == 'logout':
+            response_dict = logout()
         elif intent is not None:
             # XXX really we probably should punt
             response_dict = unexpected_intent(name, intent)
@@ -287,8 +299,11 @@ def hello(request):
             # XXX really we probably should punt
             response_dict = no_intent(name)
 
-        print(f"write user_storage: {user_storage}")
-        response_dict['payload']['google']['userStorage'] = dict_to_str(user_storage)
+        if 'resetUserStorage' in response_dict['payload']['google']:
+            print("Resetting user storage")
+        else:
+            print(f"write user_storage: {user_storage}")
+            response_dict['payload']['google']['userStorage'] = dict_to_str(user_storage)
 
         # response_str += f" , conversation I D {id_short(conv_id)} , user I D {id_short(google_user_id)}"
 
