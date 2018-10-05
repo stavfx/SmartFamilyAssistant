@@ -22,7 +22,7 @@ def rich_test(request):
 
 def get_location(name, params):
     originalPayload = params.get("originalDetectIntentRequest", {}).get("payload", {})
-    convoId = originalPayload.get("conversation", {}).get("conversationId", "missing-convo-id")
+    convoId = originalPayload.get("conversation", {}).get("conversationId")
     userId = originalPayload.get("user", {}).get("userId")
     return f"Get the location of {name} (convoId={convoId} userId={userId})"
 
@@ -122,7 +122,7 @@ def hello(request):
         print(f"intent: {intent}")
 
         if (intent == 'Get Location'):
-            response_str = get_location(name, request_json.get('queryResult', {}).get('parameters', {}))
+            response_str = get_location(name, request_json)
         elif (intent == 'Login'):
             response_str = login(name)
         elif (intent == 'Pause Internet'):
