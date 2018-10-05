@@ -21,13 +21,33 @@ def get_location(name, params):
             (place_name, distance_meters, at_place) = places.get_nearest_place_at_info(
                 overview.places, location.lat, location.lon, location.accuracyMeters)
             if at_place:
-                return make_response_dict(f"{name} is at {place_name}")
+                return make_location_response(f"{name} is at {place_name}", user, location)
             else:
-                return make_response_dict(f"{name} is {distance_meters} meters from {place_name}")
+                return make_location_response(f"{name} is {distance_meters} meters from {place_name}", user, location)
         else:
-            return make_response_dict(f"{name} is at {location.lat},{location.lon}")
+            return make_location_response(f"{name} is at {location.lat},{location.lon}", user, location)
     else:
         return make_response_dict(f"Sorry, I don't know where {name} is.")
+
+
+def make_location_response(message, user, location):
+    location_str = f"{location.lat},{location.lon}"
+    map_url = f"https://maps.googleapis.com/maps/api/staticmap?center={location_str}&zoom=15&size=320x240" \
+              "&markers=anchor:center|icon:https://f8bkee3ht8.execute-api.us-west-2.amazonaws.com/live/images" \
+              f"/{user.imageId}/64/64?format=png|{location_str}&key=AIzaSyDS2nG7-Aec721rRJ_lw9zoeJsrUkFTmNE"
+    return make_response_dict(message)['richResponse']['items'].append(
+        dict(
+            basicCard=dict(
+                image=map_url,
+                buttons=[
+                    dict(
+                        title="Launch Verizon Smart Family",
+                        openUrlAction=dict(url="https://bnc.lt/vzsf")
+                    )
+                ]
+            )
+        )
+    )
 
 
 def _do_pause_internet(name, pause):
