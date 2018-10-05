@@ -70,12 +70,12 @@ def _do_pause_internet(name, pause):
 
 
 def pause_internet(name):
-    _do_pause_internet(pause=True)
+    _do_pause_internet(name, pause=True)
     return make_response_dict(f"I have blocked the Internet for {name}")
 
 
 def unpause_internet(name):
-    _do_pause_internet(pause=False)
+    _do_pause_internet(name, pause=False)
     return make_response_dict(f"{name} can browse the Internet again")
 
 
