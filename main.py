@@ -63,7 +63,7 @@ def make_response_dict(response_str, user_storage=None):
     )
 
     if user_storage:
-        google_dict['userStorage'] = user_storage
+        google_dict['userStorage'] = dumps(user_storage)
 
     return dict(
         payload=dict(
