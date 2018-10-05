@@ -85,7 +85,8 @@ def welcome(query_result, storage):
             return make_response_dict(
                 f"Welcome {name}!\n"
                 "In the real world, we'd have you log in with OAuth2 using your phone.\n"
-                "But this is a demo, so we just logged you in with your super secure password... NOT!",
+                "But this is a demo, so we just logged you in with your super secure password...\n"
+                "NOT!",
                 continue_conversation=True)
 
     # No stored or provided mdn, ask for it
@@ -93,8 +94,9 @@ def welcome(query_result, storage):
 
 
 def prompt_user_for_mdn():
-    response_dict = make_response_dict("Hi! Welcome to Verizon Smart Family. What's your phone number?",
-                                       continue_conversation=True)
+    response_dict = make_response_dict(
+        "Hi! Welcome to Verizon Smart Family. What's your phone number?",
+        continue_conversation=True)
     response_dict['payload']['google']['systemIntent'] = dict(intent="actions.intent.TEXT",
                                                               parameterName="mdn")
     return response_dict
