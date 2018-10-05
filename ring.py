@@ -121,6 +121,9 @@ def get_last_known_location(last_knowns, user_id):
     location for a given user id.
     """
     last_known = next(lk for lk in last_knowns if lk.userId == user_id)
+    if not last_known:
+        return None
+
     network = last_known.lastKnownNetworkLocation
     device = last_known.lastKnownDeviceLocation
     if not network and not device:
