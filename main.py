@@ -67,7 +67,7 @@ def pause_internet(name):
         return make_response_dict(f"You can only pause the internet for a child.")
 
     # XXX error handling?
-    common.update_controls_settings(overview.group.id, user.id, block_all_internet=True)
+    common.update_controls_settings(token, overview.group.id, user.id, block_all_internet=True)
     return make_response_dict(f"I have blocked the internet for {name}")
 
 

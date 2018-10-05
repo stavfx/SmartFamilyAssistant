@@ -103,7 +103,7 @@ def is_child(members, user):
 #     print(f"XXX members={group.members}")
 
 
-def update_controls_settings(group_id, user_id, block_all_internet):
+def update_controls_settings(access_token, group_id, user_id, block_all_internet):
     """
     Selectively update controls settings for the specified user, who must be a
     managed user.
@@ -112,6 +112,7 @@ def update_controls_settings(group_id, user_id, block_all_internet):
     here) is block internet.
     """
     clients.gateway.controls.updateControlsSettings(
+        accessToken=access_token,
         groupId=group_id,
         userId=user_id,
         request=dict(
