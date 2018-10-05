@@ -42,7 +42,12 @@ def get_overview(access_token):
     """
     Return the overview for the user associated with the access token.
     """
-    return clients.gateway.overview.getOverview(accessToken=access_token).result()
+    sections = ["me", "systemInfo", "group",
+                "places", "lastKnowns", "users",
+                "controlsSettingsList", "devices", "folders"]
+    return clients.gateway.overview.getOverview(
+        accessToken=access_token,
+        sections=sections).result()
 
 
 def is_test_account(group):
