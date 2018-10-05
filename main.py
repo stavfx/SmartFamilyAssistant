@@ -55,7 +55,7 @@ def login(mdn):
     return make_response_dict(f"Login function is still in progress")
 
 
-def pause_internet(name):
+def _do_pause_internet(name, pause):
     token, _ = common.auth("5551196700", "abcd1234")
     overview = common.get_overview(token)
     user = common.get_user(overview.users, name)
@@ -63,23 +63,19 @@ def pause_internet(name):
         return make_response_dict(f"Sorry, I don't know who {name} is.")
 
     if not common.is_child(overview.group.members, user):
-        return make_response_dict(f"You can only pause the internet for a child.")
+        return make_response_dict(
+            f"You can only {'pause' if pause else 'un-pause'} the internet for a child.")
 
-    common.update_controls_settings(token, overview.group.id, user.id, block_all_internet=True)
+    common.update_controls_settings(token, overview.group.id, user.id, block_all_internet=pause)
+
+
+def pause_internet(name):
+    _do_pause_internet(pause=True)
     return make_response_dict(f"I have blocked the Internet for {name}")
 
 
 def unpause_internet(name):
-    token, _ = common.auth("5551196700", "abcd1234")
-    overview = common.get_overview(token)
-    user = common.get_user(overview.users, name)
-    if user is None:
-        return make_response_dict(f"Sorry, I don't know who {name} is.")
-
-    if not common.is_child(overview.group.members, user):
-        return make_response_dict(f"You can only un-pause the internet for a child.")
-
-    common.update_controls_settings(token, overview.group.id, user.id, block_all_internet=False)
+    _do_pause_internet(pause=False)
     return make_response_dict(f"{name} can browse the Internet again")
 
 
