@@ -157,7 +157,7 @@ def hello(request):
             # XXX really we probably should punt
             response_str = no_intent(name)
 
-        response_str += f" , conversation ID {id_short(conv_id)} , user id {id_short(user_id)}"
+        response_str += f" , conversation I D {id_short(conv_id)} , user I D {id_short(user_id)}"
         continue_conversation = False
 
     except Exception as e:
