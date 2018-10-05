@@ -1,6 +1,7 @@
 from json import dumps, loads
 import requests
 import sys
+from time import time
 
 
 def sam_test(request):
@@ -42,24 +43,31 @@ def no_intent(name):
     return f"{name}, I did not receive a command"
 
 
-def make_response_dict(response_str):
+def make_response_dict(response_str, user_storage=None):
     """
     Return a response dictionary based on an input text to speech string.
+
+    user_storage is an optional dict to persist
     """
+    google_dict = dict(
+        expectUserResponse=True,
+        richResponse=dict(
+            items=[
+                dict(
+                    simpleResponse=dict(
+                        textToSpeech=response_str
+                    )
+                )
+            ]
+        )
+    )
+
+    if user_storage:
+        google_dict['userStorage'] = user_storage
+
     return dict(
         payload=dict(
-            google=dict(
-                expectUserResponse=True,
-                richResponse=dict(
-                    items=[
-                        dict(
-                            simpleResponse=dict(
-                                textToSpeech=response_str
-                            )
-                        )
-                    ]
-                )
-            )
+            google=google_dict
         )
     )
 
@@ -82,7 +90,7 @@ def hello(request):
         stav_test(request)
         rich_test(request)
 
-        print("XXX11 request follows")
+        print("XXX12 request follows")
         print(request)
         print("dict follows")
         print(request.__dict__)
@@ -132,9 +140,12 @@ def hello(request):
         print(sys.exc_info())
         response_str = error()
 
-    response_dict = make_response_dict(response_str)
+    user_storage = dict(name=name,
+                        intent=intent,
+                        time=time())
+    response_dict = make_response_dict(response_str, user_storage)
     response_json = dumps(response_dict)
-    print("XXX11 response follows")
+    print("XXX12 response follows")
     print(response_json)
     # pprint.pprint(response_json)
     return response_json
